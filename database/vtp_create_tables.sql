@@ -6,7 +6,7 @@ drop table if exists TeamMember;
 drop table if exists Persona;
 PRAGMA foreign_keys = ON;
 
-CREATE TABLE LGA (
+CREATE TABLE LGAs (
     code              INTEGER NOT NULL,
     year              INTEGER NOT NULL,
     name              TEXT NOT NULL,
@@ -27,27 +27,27 @@ CREATE TABLE Population (
     FOREIGN KEY (lga_year) REFERENCES LGA(lga_year)
 );
 
-CREATE TABLE State (
+CREATE TABLE States (
     StateCode       INTEGER NOT NULL,
     StateName       TEXT NOT NULL,
     abbreviation    TEXT NOT NULL,
     PRIMARY KEY (StateCode)
 );
 
-CREATE TABLE TeamMember (
+CREATE TABLE TeamMembers (
     MemberID        TEXT NOT NULL,
     FirstName       TEXT NOT NULL,
     LastName        TEXT NOT NULL,
     PRIMARY KEY (mmbID)
 );
 
-CREATE TABLE Persona (
+CREATE TABLE Personas (
     PerName         TEXT NOT NULL,
     PerImagePath    TEXT NOT NULL,
     PRIMARY KEY (PerName)
 );
 
-CREATE TABLE PersonaAttribute (
+CREATE TABLE PersonaAttributes (
     ID              INTEGER NOT NULL,
     AttributeType   TEXT NOT NULL,
     Description     TEXT NOT NULL,
