@@ -134,7 +134,7 @@ public class VTPProcessCSV {
             String lgaCode = rowScanner.next();
 
             // Skip lga_name
-            String lgaName = rowScanner.next();
+            //String lgaName = rowScanner.next();
 
             // Fix the year
             int year = 2016;
