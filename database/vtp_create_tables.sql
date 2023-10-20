@@ -1,9 +1,10 @@
 PRAGMA foreign_keys = OFF;
-drop table if exists LGA;
+drop table if exists LGAs;
 drop table if exists Population;
-drop table if exists StateTerritory;
-drop table if exists TeamMember;
-drop table if exists Persona;
+drop table if exists States;
+drop table if exists TeamMembers;
+drop table if exists Personas;
+drop table if exists PersonaAttributes;
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE LGAs (
@@ -38,12 +39,13 @@ CREATE TABLE TeamMembers (
     MemberID        TEXT NOT NULL,
     FirstName       TEXT NOT NULL,
     LastName        TEXT NOT NULL,
-    PRIMARY KEY (mmbID)
+    PRIMARY KEY (MemberID)
 );
 
 CREATE TABLE Personas (
     PerName         TEXT NOT NULL,
     PerImagePath    TEXT NOT NULL,
+    PerImageCredit  TEXT,
     PRIMARY KEY (PerName)
 );
 
@@ -52,6 +54,5 @@ CREATE TABLE PersonaAttributes (
     AttributeType   TEXT NOT NULL,
     Description     TEXT NOT NULL,
     PRIMARY KEY (ID)
-
 );
 
