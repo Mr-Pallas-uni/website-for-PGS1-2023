@@ -45,6 +45,7 @@ CREATE TABLE TeamMembers (
 CREATE TABLE Personas (
     PerName         TEXT NOT NULL,
     PerImagePath    TEXT NOT NULL,
+    PerImageCredit  TEXT,
     PRIMARY KEY (PerName)
 );
 
@@ -53,6 +54,5 @@ CREATE TABLE PersonaAttributes (
     AttributeType   TEXT NOT NULL,
     Description     TEXT NOT NULL,
     PRIMARY KEY (ID)
-
 );
 
