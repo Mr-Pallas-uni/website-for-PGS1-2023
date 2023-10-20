@@ -25,28 +25,31 @@ CREATE TABLE Population (
     FOREIGN KEY (lga_year) REFERENCES LGA(lga_year)
 );
 
-CREATE TABLE StateTerritory (
-    StCode          INTEGER NOT NULL,
-    StName            TEXT NOT NULL,
+CREATE TABLE State (
+    StateCode       INTEGER NOT NULL,
+    StateName       TEXT NOT NULL,
     abbreviation    TEXT NOT NULL,
-    PRIMARY KEY (StCode)
+    PRIMARY KEY (StateCode)
 );
 
 CREATE TABLE TeamMember (
-    mmbID           TEXT NOT NULL,
-    firstName       TEXT NOT NULL,
-    lastName        TEXT NOT NULL,
+    MemberID        TEXT NOT NULL,
+    FirstName       TEXT NOT NULL,
+    LastName        TEXT NOT NULL,
     PRIMARY KEY (mmbID)
 );
 
 CREATE TABLE Persona (
-    perID           INTEGER NOT NULL,
-    perName         TEXT NOT NULL,
-    perBackground   TEXT NOT NULL,
-    perNeed        TEXT NOT NULL,
-    perGoal        TEXT NOT NULL,
-    perSkillExp     TEXT NOT NULL,
-    perImagePath    TEXT NOT NULL,
-    PRIMARY KEY (perID)
-)
+    PerName         TEXT NOT NULL,
+    PerImagePath    TEXT NOT NULL,
+    PRIMARY KEY (PerName)
+);
+
+CREATE TABLE PersonaAttribute (
+    ID              INTEGER NOT NULL,
+    AttributeType   TEXT NOT NULL,
+    Description     TEXT NOT NULL,
+    PRIMARY KEY (ID)
+
+);
 
