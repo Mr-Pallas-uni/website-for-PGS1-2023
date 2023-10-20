@@ -8,10 +8,6 @@ CREATE TABLE LGA (
     code              INTEGER NOT NULL,
     year              INTEGER NOT NULL,
     name              TEXT NOT NULL,
-    state_abbr        CHAR (10),
-    area              DOUBLE,
-    latitude          DOUBLE,
-    longitude         DOUBLE,
     PRIMARY KEY (code, year)
 );
 
@@ -28,4 +24,29 @@ CREATE TABLE Population (
     FOREIGN KEY (lga_code) REFERENCES LGA(lga_code)
     FOREIGN KEY (lga_year) REFERENCES LGA(lga_year)
 );
+
+CREATE TABLE StateTerritory (
+    StCode          INTEGER NOT NULL,
+    StName            TEXT NOT NULL,
+    abbreviation    TEXT NOT NULL,
+    PRIMARY KEY (StCode)
+);
+
+CREATE TABLE TeamMember (
+    mmbID           TEXT NOT NULL,
+    firstName       TEXT NOT NULL,
+    lastName        TEXT NOT NULL,
+    PRIMARY KEY (mmbID)
+);
+
+CREATE TABLE Persona (
+    perID           INTEGER NOT NULL,
+    perName         TEXT NOT NULL,
+    perBackground   TEXT NOT NULL,
+    perNeeds        TEXT NOT NULL,
+    perGoals        TEXT NOT NULL,
+    perSkillExp     TEXT NOT NULL,
+    perImagePath    TEXT NOT NULL,
+    PRIMARY KEY (perID)
+)
 
