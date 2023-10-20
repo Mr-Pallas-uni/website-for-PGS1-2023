@@ -1,7 +1,9 @@
--- Create tables for Semester 1 2023 CTG example ER Model
 PRAGMA foreign_keys = OFF;
 drop table if exists LGA;
 drop table if exists Population;
+drop table if exists StateTerritory;
+drop table if exists TeamMember;
+drop table if exists Persona;
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE LGA (
@@ -48,5 +50,5 @@ CREATE TABLE Persona (
     perSkillExp     TEXT NOT NULL,
     perImagePath    TEXT NOT NULL,
     PRIMARY KEY (perID)
-)
+);
 
