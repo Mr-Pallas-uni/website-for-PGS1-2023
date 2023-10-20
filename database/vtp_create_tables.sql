@@ -43,8 +43,8 @@ CREATE TABLE Persona (
     perID           INTEGER NOT NULL,
     perName         TEXT NOT NULL,
     perBackground   TEXT NOT NULL,
-    perNeeds        TEXT NOT NULL,
-    perGoals        TEXT NOT NULL,
+    perNeed        TEXT NOT NULL,
+    perGoal        TEXT NOT NULL,
     perSkillExp     TEXT NOT NULL,
     perImagePath    TEXT NOT NULL,
     PRIMARY KEY (perID)
