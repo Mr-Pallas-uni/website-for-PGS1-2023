@@ -5,8 +5,8 @@ drop table if exists States;
 drop table if exists TeamMembers;
 drop table if exists Personas;
 drop table if exists PersonaAttributes;
-drop table if exists Demographic;
-drop table if exists LTHC;
+drop table if exists Demographics;
+drop table if exists LTHCs;
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE LGAs (
@@ -69,7 +69,7 @@ CREATE TABLE Demographics (
 
 CREATE TABLE LTHCs (
     lga_code          INTEGER NOT NULL,
-    lga_year              INTEGER NOT NULL,
+    lga_year          INTEGER NOT NULL,
     indigenous_status TEXT NOT NULL,
     sex               CHAR (1) NOT NULL,
     condition         TEXT NOT NULL,
@@ -77,4 +77,3 @@ CREATE TABLE LTHCs (
     PRIMARY KEY (lga_code, lga_year, indigenous_status, sex, condition)
     FOREIGN KEY (lga_code, lga_year, indigenous_status, sex) REFERENCES Demographics(lga_code, lga_year, indigenous_status, sex)  
 );
-

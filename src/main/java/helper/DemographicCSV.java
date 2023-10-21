@@ -58,7 +58,7 @@ public class DemographicCSV {
       // We need some error handling.
       try {
          // change this based on the year being loaded.
-         Scanner lineScanner = new Scanner(new File(CSV_FILE2));
+         Scanner lineScanner = new Scanner(new File(CSV_FILE1));
 
          // Read the first line of "headings"
          String header = lineScanner.nextLine();
@@ -86,6 +86,64 @@ public class DemographicCSV {
             String lgaCode = rowScanner.next();
 
             // change this based on which data set is being used.
+            int year = 2016;
+
+            // Go through the data for the row
+            // If we run out of categories, stop for safety (so the code doesn't crash)
+            for (int i = 0; i<6; i++) {
+
+               // Prepare a new SQL Query & Set a timeout
+               Statement statement = connection.createStatement();
+
+               // Create Insert Statement
+               String query = "INSERT into Demographics VALUES ("
+                              + lgaCode + ","
+                              + year + ","
+                              + "'" + status[indexStatus] + "',"
+                              + "'" + sex[indexSex]
+                              + "')";
+
+               // Execute the INSERT
+               System.out.println("Executing: " + query);
+               statement.execute(query);
+
+               // Update indices - go to next sex
+               indexSex++;
+               if (indexSex >= sex.length) {
+                  // Go to next status
+                  indexSex = 0;
+                  indexStatus++;
+
+                  if (indexStatus >= status.length) {
+                     // Go to next Category
+                     indexStatus = 0;
+                  }
+               }
+            }
+         }
+
+         lineScanner = new Scanner(new File(CSV_FILE2));
+
+         // Read the first line of "headings"
+         header = lineScanner.nextLine();
+         System.out.println("Heading row" + header + "\n");
+
+         while (lineScanner.hasNext()) {
+            // Always get scan by line
+            String line = lineScanner.nextLine();
+            
+            // Create a new scanner for this line to delimit by commas (,)
+            Scanner rowScanner = new Scanner(line);
+            rowScanner.useDelimiter(",");
+
+            // These indicies track which column we are up to
+            int indexStatus = 0;
+            int indexSex = 0;
+
+            // Save the lga_code as we need it for the foreign key
+            String lgaCode = rowScanner.next();
+
+            // change this based on which data set is being used.
             int year = 2021;
 
             // Go through the data for the row
@@ -96,7 +154,7 @@ public class DemographicCSV {
                Statement statement = connection.createStatement();
 
                // Create Insert Statement
-               String query = "INSERT into Demographic VALUES ("
+               String query = "INSERT into Demographics VALUES ("
                               + lgaCode + ","
                               + year + ","
                               + "'" + status[indexStatus] + "',"

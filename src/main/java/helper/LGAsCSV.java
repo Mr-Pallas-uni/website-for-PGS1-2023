@@ -119,7 +119,9 @@ public class LGAsCSV {
       Statement statement = connection.createStatement();
 
       // Create Insert Statement
-      String query = "Delete from LGAs WHERE lga_code = ZZZZZ";
+      String query = "PRAGMA foreign_keys = OFF;" +
+      "Delete from LGAs WHERE lga_code = 'ZZZZZ';" +
+      "PRAGMA foreign_keys = ON;";
 
             // Execute the INSERT
             System.out.println("Executing: " + query);
