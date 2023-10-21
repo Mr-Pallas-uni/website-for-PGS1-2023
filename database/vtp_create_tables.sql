@@ -5,13 +5,15 @@ drop table if exists States;
 drop table if exists TeamMembers;
 drop table if exists Personas;
 drop table if exists PersonaAttributes;
+drop table if exists Demographic;
+drop table if exists LTHC;
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE LGAs (
-    code              INTEGER NOT NULL,
-    year              INTEGER NOT NULL,
+    lga_code          INTEGER NOT NULL,
+    lga_year          INTEGER NOT NULL,
     name              TEXT NOT NULL,
-    PRIMARY KEY (code, year)
+    PRIMARY KEY (lga_code, lga_year)
 );
 
 CREATE TABLE Population (
@@ -54,5 +56,25 @@ CREATE TABLE PersonaAttributes (
     AttributeType   TEXT NOT NULL,
     Description     TEXT NOT NULL,
     PRIMARY KEY (ID)
+);
+
+CREATE TABLE Demographics (
+    lga_code          INTEGER NOT NULL,
+    lga_year          INTEGER NOT NULL,
+    indigenous_status TEXT NOT NULL,
+    sex               CHAR (1) NOT NULL,
+    PRIMARY KEY (lga_code, lga_year, indigenous_status, sex)
+    FOREIGN KEY (lga_code, lga_year) REFERENCES LGAs(code, year)
+);
+
+CREATE TABLE LTHCs (
+    lga_code          INTEGER NOT NULL,
+    lga_year              INTEGER NOT NULL,
+    indigenous_status TEXT NOT NULL,
+    sex               CHAR (1) NOT NULL,
+    condition         TEXT NOT NULL,
+    count             INTEGER NOT NULL,
+    PRIMARY KEY (lga_code, lga_year, indigenous_status, sex, condition)
+    FOREIGN KEY (lga_code, lga_year, indigenous_status, sex) REFERENCES Demographics(lga_code, lga_year, indigenous_status, sex)  
 );
 
