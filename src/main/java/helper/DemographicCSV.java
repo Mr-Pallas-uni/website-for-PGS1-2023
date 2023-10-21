@@ -57,9 +57,8 @@ public class DemographicCSV {
 
       // We need some error handling.
       try {
-         // Open A CSV File to process, one line at a time
-         // CHANGE THIS to process a different file
-         Scanner lineScanner = new Scanner(new File(CSV_FILE1));
+         // change this based on the year being loaded.
+         Scanner lineScanner = new Scanner(new File(CSV_FILE2));
 
          // Read the first line of "headings"
          String header = lineScanner.nextLine();
@@ -86,8 +85,8 @@ public class DemographicCSV {
             // Save the lga_code as we need it for the foreign key
             String lgaCode = rowScanner.next();
 
-            // Fix the year
-            int year = 2016;
+            // change this based on which data set is being used.
+            int year = 2021;
 
             // Go through the data for the row
             // If we run out of categories, stop for safety (so the code doesn't crash)

@@ -38,10 +38,6 @@ public class LGAsCSV {
 
 
    public static void main (String[] args) {
-      // The following arrays define the order of columns in the INPUT CSV.
-      // The order of each array MUST match the order of the CSV.
-      // These are specific to the given file and should be changed for each file.
-      // This is a *simple* way to help you get up and running quickly wihout being confusing
       
       // JDBC Database Object
       Connection connection = null;
@@ -119,6 +115,15 @@ public class LGAsCSV {
             System.out.println("Executing: " + query);
             statement.execute(query);
          }
+      // Prepare a new SQL Query & Set a timeout
+      Statement statement = connection.createStatement();
+
+      // Create Insert Statement
+      String query = "Delete from LGAs WHERE lga_code = ZZZZZ";
+
+            // Execute the INSERT
+            System.out.println("Executing: " + query);
+            statement.execute(query);
       }
        catch (Exception e) {
          e.printStackTrace();
