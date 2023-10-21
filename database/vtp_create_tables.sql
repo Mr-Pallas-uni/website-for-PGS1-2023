@@ -7,6 +7,8 @@ drop table if exists Personas;
 drop table if exists PersonaAttributes;
 drop table if exists Demographics;
 drop table if exists LTHCs;
+drop table if exists NonSchoolCompletion;
+
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE LGAs (
@@ -75,5 +77,16 @@ CREATE TABLE LTHCs (
     condition         TEXT NOT NULL,
     count             INTEGER NOT NULL,
     PRIMARY KEY (lga_code, lga_year, indigenous_status, sex, condition)
+    FOREIGN KEY (lga_code, lga_year, indigenous_status, sex) REFERENCES Demographics(lga_code, lga_year, indigenous_status, sex)  
+);
+
+CREATE TABLE NonSchoolCompletion (
+    lga_code          INTEGER NOT NULL,
+    lga_year          INTEGER NOT NULL,
+    indigenous_status TEXT NOT NULL,
+    sex               CHAR (1) NOT NULL,
+    nonSchoolBracket  TEXT NOT NULL,
+    count             INTEGER NOT NULL,
+    PRIMARY KEY (lga_code, lga_year, indigenous_status, sex, nonSchoolBracket)
     FOREIGN KEY (lga_code, lga_year, indigenous_status, sex) REFERENCES Demographics(lga_code, lga_year, indigenous_status, sex)  
 );
