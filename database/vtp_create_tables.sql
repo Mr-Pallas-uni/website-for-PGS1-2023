@@ -90,3 +90,26 @@ CREATE TABLE NonSchoolCompletion (
     PRIMARY KEY (lga_code, lga_year, indigenous_status, sex, nonSchoolBracket)
     FOREIGN KEY (lga_code, lga_year, indigenous_status, sex) REFERENCES Demographics(lga_code, lga_year, indigenous_status, sex)  
 );
+
+CREATE TABLE SchoolCompletion (
+    lga_code          INTEGER NOT NULL,
+    lga_year          INTEGER NOT NULL,
+    indigenous_status TEXT NOT NULL,
+    sex               CHAR (1) NOT NULL,
+    SchoolCompletion  TEXT NOT NULL,
+    count             INTEGER NOT NULL,
+    PRIMARY KEY (lga_code, lga_year, indigenous_status, sex, SchoolCompletion)
+    FOREIGN KEY (lga_code, lga_year, indigenous_status, sex) REFERENCES Demographics(lga_code, lga_year, indigenous_status, sex)
+);
+
+CREATE TABLE Population (
+    lga_code          INTEGER NOT NULL,
+    lga_year          INTEGER NOT NULL,
+    indigenous_status TEXT NOT NULL,
+    sex               CHAR (1) NOT NULL,
+    age_category      TEXT NOT NULL,
+    count             INTEGER NOT NULL,
+    PRIMARY KEY (lga_code, lga_year, indigenous_status, sex, age_category)
+    FOREIGN KEY (lga_code, lga_year, indigenous_status, sex) REFERENCES Demographics(lga_code, lga_year, indigenous_status, sex)
+);
+
