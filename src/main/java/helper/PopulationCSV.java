@@ -155,9 +155,7 @@ public class PopulationCSV {
                               + "'" + status[indexStatus] + "',"
                               + "'" + sex[indexSex] + "',"
                               + "'" + category[indexCategory] + "',"
-                              + count + ","
-                              + age_min[indexCategory] + ","
-                              + age_max[indexCategory]
+                              + count
                               + ")";
 
                // Execute the INSERT
@@ -231,8 +229,6 @@ public class PopulationCSV {
                               + "'" + sex[indexSex] + "',"
                               + "'" + category[indexCategory] + "',"
                               + count + ","
-                              + age_min[indexCategory] + ","
-                              + age_max[indexCategory]
                               + ")";
 
                // Execute the INSERT

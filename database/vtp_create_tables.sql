@@ -25,11 +25,9 @@ CREATE TABLE Population (
     sex               CHAR (1) NOT NULL,
     age_category      TEXT NOT NULL,
     count             INTEGER NOT NULL,
-    age_min           INTEGER,
-    age_max           INTEGER,
     PRIMARY KEY (lga_code, lga_year, indigenous_status, sex, age_category)
-    FOREIGN KEY (lga_code) REFERENCES LGA(lga_code)
-    FOREIGN KEY (lga_year) REFERENCES LGA(lga_year)
+    FOREIGN KEY (lga_code) REFERENCES LGAs(lga_code)
+    FOREIGN KEY (lga_year) REFERENCES LGAs(lga_year)
 );
 
 CREATE TABLE States (
