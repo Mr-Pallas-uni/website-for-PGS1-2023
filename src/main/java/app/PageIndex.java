@@ -27,137 +27,36 @@ public class PageIndex implements Handler {
     // URL of this page relative to http://localhost:7001/
     public static final String URL = "/";
 
+    private static final String TEMPLATE = ("index.html");
+
     @Override
     public void handle(Context context) throws Exception {
-        // Create a simple HTML webpage in a String
-        String html = "<html>";
 
-        // Add some Header information
-        html = html + "<head>" + 
-               "<title>Homepage</title>";
+        JDBCConnection jdbc = new JDBCConnection();
 
-        // Add some CSS (external file)
-        html = html + "<link rel='stylesheet' type='text/css' href='common.css' />";
-        html = html + "</head>";
+        Map<String, Object> model = new HashMap<String, Object>();
 
-        // Add the body
-        html = html + "<body>";
+        model.put("title", new String("HomePage!!!!"));
 
-        // Add the topnav
-        // This uses a Java v15+ Text Block
-        html = html + """
-            <div class='topnav'>
-                <a href='/'>Homepage</a>
-                <a href='mission.html'>Our Mission</a>
-                <a href='page2A.html'>Sub Task 2.A</a>
-                <a href='page2B.html'>Sub Task 2.B</a>
-                <a href='page3A.html'>Sub Task 3.A</a>
-                <a href='page3B.html'>Sub Task 3.B</a>
-            </div>
-        """;
+        ArrayList<State> states16 = jdbc.getStates(2016);
+        int lgas16 = jdbc.countLGAs(2016);
+        int pop16 = jdbc.countPop(2016);
 
-        // Add header content block
-        html = html + """
-            <div class='header'>
-                <h1>
-                    <img src='logo.png' class='top-image' alt='RMIT logo' height='75'>
-                    Homepage
-                </h1>
-            </div>
-        """;
+        model.put("pop16", pop16);
+        model.put("LGAs16", lgas16);
+        model.put("states16", states16);
+        
 
-        // Add Div for page Content
-        html = html + "<div class='content'>";
+        ArrayList<State> states21 = jdbc.getStates(2021);
+        int lgas21 = jdbc.countLGAs(2021);
+        int pop21 = jdbc.countPop(2021);
 
-        // Add HTML for the page content
-        html = html + """
-            <p>Homepage content</p>
-            """;
-
-        // Get the ArrayList of Strings of all LGAs
-        ArrayList<String> lgaNames = getLGAs2016();
-
-        // Add HTML for the LGA list
-        html = html + "<h1>All 2016 LGAs in the Voice to Parliament database</h1>" + "<ul>";
-
-        // Finally we can print out all of the LGAs
-        for (String name : lgaNames) {
-            html = html + "<li>" + name + "</li>";
-        }
-
-        // Finish the List HTML
-        html = html + "</ul>";
-
-        // Close Content div
-        html = html + "</div>";
-
-        // Footer
-        html = html + """
-            <div class='footer'>
-                <p>COSC2803 - Studio Project Starter Code (Sep23)</p>
-            </div>
-        """;
-
-        // Finish the HTML webpage
-        html = html + "</body>" + "</html>";
-
-
+        model.put("pop21", pop21);
+        model.put("LGAs21", lgas21);
+        model.put("states21", states21);
         // DO NOT MODIFY THIS
-        // Makes Javalin render the webpage
-        context.html(html);
+        // Makes Javalin render the webpage using Thymeleaf
+        context.render(TEMPLATE, model);
     }
 
-
-    /**
-     * Get the names of the LGAs in the database.
-     */
-    public ArrayList<String> getLGAs2016() {
-        // Create the ArrayList of LGA objects to return
-        ArrayList<String> lgas = new ArrayList<String>();
-
-        // Setup the variable for the JDBC connection
-        Connection connection = null;
-
-        try {
-            // Connect to JDBC data base
-            connection = DriverManager.getConnection(JDBCConnection.DATABASE);
-
-            // Prepare a new SQL Query & Set a timeout
-            Statement statement = connection.createStatement();
-            statement.setQueryTimeout(30);
-
-            // The Query
-            String query = "SELECT * FROM LGA WHERE year='2016'";
-            
-            // Get Result
-            ResultSet results = statement.executeQuery(query);
-
-            // Process all of the results
-            while (results.next()) {
-                String name16  = results.getString("name");
-
-                // Add the lga object to the array
-                lgas.add(name16);
-            }
-
-            // Close the statement because we are done with it
-            statement.close();
-        } catch (SQLException e) {
-            // If there is an error, lets just pring the error
-            System.err.println(e.getMessage());
-        } finally {
-            // Safety code to cleanup
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                // connection close failed.
-                System.err.println(e.getMessage());
-            }
-        }
-
-        // Finally we return all of the lga
-        return lgas;
-    }
 }

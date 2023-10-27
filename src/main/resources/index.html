@@ -1,39 +1,74 @@
 <!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-   <title>Thymeleaf Example - Homepage</title>
-
-   <link rel="stylesheet" type="text/css" href="common.css" />
+   <title>Homepage</title>
+   <link rel='stylesheet' type='text/css' href='common.css' />
+   <link rel='stylesheet' type='text/css' href='index.css' />
 </head>
+
 <body>
    <div class='topnav'>
       <a href='/'>Homepage</a>
-      <a href='movies.html'>List All Movies</a>
-      <a href='moviestype.html'>Get Movies by Type</a>
+      <a href='mission.html'>Our Mission</a>
+      <a href='page2A.html'>Sub Task 2.A</a>
+      <a href='page2B.html'>Sub Task 2.B</a>
+      <a href='page3A.html'>Sub Task 3.A</a>
+      <a href='page3B.html'>Sub Task 3.B</a>
    </div>
    
    <div class='header'>
-      <h1>
-         <img src='logo.png' class='top-image' alt='RMIT logo' height='75'>
-         Homepage
-      </h1>
-   </div>
-   
+      <img src='logo.png' class='top-image' alt='RMIT logo' height='75'><h1 th:text="${title}"></h1>
+  </div>
+
    <div class='content'>
-      <p>Links to queries on different web pages</p>
-      <ul>
-         <li>
-            <a href='movies.html'>List all Movies</a>
-         </li>
-         <li>
-            <a href='moviestype.html'>Get Movies by Type</a>
-         </li>
-      </ul>
+      <div class = link-list>
+         <h2>pages on this site:</h2>
+         <ul>
+         <li><a href='/'>Homepage</a></li>
+         <li><a href='mission.html'>Our Mission</a></li>
+         <li><a href='page2A.html'>Sub Task 2.A</a></li>
+         <li><a href='page2B.html'>Sub Task 2.B</a></li>
+         <li><a href='page3A.html'>Sub Task 3.A</a></li>
+         <li><a href='page3B.html'>Sub Task 3.B</a></li>
+         </ul>
+      </div>
+      <h2> <span th:text="${pop16}"></span> people surveyed over <span th:text="${LGAs16}"></span> LGAs in 2016</h2>
+      <h2> state populations in 2016</h2>
+      <table>
+         <thead>
+             <tr>
+                 <th> State/territory </th>
+                 <th> Population </th>
+             </tr>
+         </thead>
+         <tbody>
+             <tr th:each="state : ${states16}">
+                 <td><span th:text="${state.getName()}"> State/territory </span></td>
+                 <td><span th:text="${state.getPop()}"> Population </span></td>
+             </tr>
+         </tbody>
+     </table>
+
+      <h2> <span th:text="${pop21}"></span> people surveyed over <span th:text="${LGAs21}"></span> LGAs in 2021</h2>
+      <h2> state populations in 2021</h2>
+      <table>
+         <thead>
+             <tr>
+                 <th> State/territory </th>
+                 <th> Population </th>
+             </tr>
+         </thead>
+         <tbody>
+             <tr th:each="state : ${states21}">
+                 <td><span th:text="${state.getName()}"> State/territory </span></td>
+                 <td><span th:text="${state.getPop()}"> Population </span></td>
+             </tr>
+         </tbody>
+     </table>
    </div>
-   
+
    <div class='footer'>
-      <p>COSC2803 Module 0 - Week 07</p>
+      <p>COSC2803 - studio project</p>
    </div>
 </body>
 </html>

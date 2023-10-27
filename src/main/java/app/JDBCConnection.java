@@ -88,4 +88,146 @@ public class JDBCConnection {
     }
 
     // TODO: Add your required methods here
+    public ArrayList<State> getStates(int year) {
+        ArrayList<State> states = new ArrayList<State>();
+
+        // Setup the variable for the JDBC connection
+        Connection connection = null;
+
+        try {
+            // Connect to JDBC data base
+            connection = DriverManager.getConnection(JDBCConnection.DATABASE);
+
+            // Prepare a new SQL Query & Set a timeout
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+
+            // The Query
+            String query = "SELECT s.StateName, SUM(count) AS count FROM\r\n" + //
+                    "LGAs l \r\n" + //
+                    "JOIN states s ON l.stateCode = s.StateCode\r\n" + //
+                    "JOIN population p ON p.lga_code = l.lga_code WHERE l.lga_year = '" + year +"' AND p.lga_year = " + year + "\r\n" + //
+                    "GROUP BY s.StateCode;";
+            
+            // Get Result
+            ResultSet results = statement.executeQuery(query);
+
+            // Process all of the results
+            while (results.next()) {
+                String name  = results.getString("StateName");
+                int count = results.getInt("count");
+
+                // Add the lga object to the array
+                State state = new State(name, count, year);
+                states.add(state);
+            }
+
+            // Close the statement because we are done with it
+            statement.close();
+        } catch (SQLException e) {
+            // If there is an error, lets just pring the error
+            System.err.println(e.getMessage());
+        } finally {
+            // Safety code to cleanup
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                // connection close failed.
+                System.err.println(e.getMessage());
+            }
+        }
+
+        // Finally we return all of the lga
+        return states;
+    }
+
+    public int countLGAs(int year) {
+        int count = -1;
+
+        // Setup the variable for the JDBC connection
+        Connection connection = null;
+
+        try {
+            // Connect to JDBC data base
+            connection = DriverManager.getConnection(JDBCConnection.DATABASE);
+
+            // Prepare a new SQL Query & Set a timeout
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+
+            // The Query
+            String query = "SELECT COUNT(*) c FROM LGAs WHERE lga_year = '" + year +"';";
+            
+            // Get Result
+            ResultSet results = statement.executeQuery(query);
+
+            // Process all of the results
+            count  = results.getInt("c");
+
+            // Close the statement because we are done with it
+            statement.close();
+        } catch (SQLException e) {
+            // If there is an error, lets just pring the error
+            System.err.println(e.getMessage());
+        } finally {
+            // Safety code to cleanup
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                // connection close failed.
+                System.err.println(e.getMessage());
+            }
+        }
+
+        // Finally we return all of the lga
+        return count;
+    }
+
+    public int countPop(int year) {
+        int count = -1;
+
+        // Setup the variable for the JDBC connection
+        Connection connection = null;
+
+        try {
+            // Connect to JDBC data base
+            connection = DriverManager.getConnection(JDBCConnection.DATABASE);
+
+            // Prepare a new SQL Query & Set a timeout
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+
+            // The Query
+            String query = "SELECT SUM(count) s FROM population WHERE lga_year = '" + year +"';";
+            
+            // Get Result
+            ResultSet results = statement.executeQuery(query);
+
+            // Process all of the results
+            count  = results.getInt("s");
+
+            // Close the statement because we are done with it
+            statement.close();
+        } catch (SQLException e) {
+            // If there is an error, lets just pring the error
+            System.err.println(e.getMessage());
+        } finally {
+            // Safety code to cleanup
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                // connection close failed.
+                System.err.println(e.getMessage());
+            }
+        }
+
+        // Finally we return all of the lga
+        return count;
+    }
 }
