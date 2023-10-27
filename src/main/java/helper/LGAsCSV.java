@@ -68,6 +68,7 @@ public class LGAsCSV {
             String lgaCode = rowScanner.next();
             int year = 2016;
             String LGAName = rowScanner.next();
+            char stateCode = lgaCode.charAt(0);
 
             // Prepare a new SQL Query & Set a timeout
             Statement statement = connection.createStatement();
@@ -76,7 +77,8 @@ public class LGAsCSV {
             String query = "INSERT into LGAs VALUES ("
                            + "\"" + lgaCode + "\","
                            + year + ","
-                           + "\"" + LGAName + "\" )";
+                           + "\"" + LGAName + "\","
+                           + "\"" + stateCode + "\" )";
 
             // Execute the INSERT
             System.out.println("Executing: " + query);
@@ -101,6 +103,7 @@ public class LGAsCSV {
             String lgaCode = rowScanner.next();
             int year = 2021;
             String LGAName = rowScanner.next();
+            char stateCode = lgaCode.charAt(0);
             
             // Prepare a new SQL Query & Set a timeout
             Statement statement = connection.createStatement();
@@ -109,7 +112,8 @@ public class LGAsCSV {
             String query = "INSERT into LGAs VALUES ("
                            + "\"" + lgaCode + "\","
                            + year + ","
-                           + "\"" + LGAName + "\" )";
+                           + "\"" + LGAName + "\","
+                           + "\"" + stateCode + "\" )";
 
             // Execute the INSERT
             System.out.println("Executing: " + query);

@@ -16,6 +16,7 @@ public class StateProcessor {
         "South Australia",
         "Western Australia",
         "Tasmania",
+        "Northern Territory",
         "Australian Capital Territory",
         "Other Australian Territory"
     };
@@ -39,6 +40,7 @@ public class StateProcessor {
         "SA",
         "WA",
         "TAS",
+        "NT",
         "ACT",
         "Other",
     };
@@ -57,7 +59,7 @@ public class StateProcessor {
             String query = "INSERT into States VALUES ("
                                 + "" + stateCodes[i] + ","
                                 + "'" + stateNames[i] + "',"
-                                + "'" + stateAbreviation[i] + "',"
+                                + "'" + stateAbreviation[i] + "'"
                                 + ")";
             
                                 // Execute the INSERT
