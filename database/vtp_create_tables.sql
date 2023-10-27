@@ -15,19 +15,8 @@ CREATE TABLE LGAs (
     lga_code          INTEGER NOT NULL,
     lga_year          INTEGER NOT NULL,
     name              TEXT NOT NULL,
+    StateCode         INTEGER NOT NULL,
     PRIMARY KEY (lga_code, lga_year)
-);
-
-CREATE TABLE Population (
-    lga_code          INTEGER NOT NULL,
-    lga_year          INTEGER NOT NULL,
-    indigenous_status TEXT NOT NULL,
-    sex               CHAR (1) NOT NULL,
-    age_category      TEXT NOT NULL,
-    count             INTEGER NOT NULL,
-    PRIMARY KEY (lga_code, lga_year, indigenous_status, sex, age_category)
-    FOREIGN KEY (lga_code) REFERENCES LGAs(lga_code)
-    FOREIGN KEY (lga_year) REFERENCES LGAs(lga_year)
 );
 
 CREATE TABLE States (
@@ -109,8 +98,6 @@ CREATE TABLE Population (
     sex               CHAR (1) NOT NULL,
     age_category      TEXT NOT NULL,
     count             INTEGER NOT NULL,
-    age_min           INTEGER,
-    age_max           INTEGER,
     PRIMARY KEY (lga_code, lga_year, indigenous_status, sex, age_category)
     FOREIGN KEY (lga_code, lga_year, indigenous_status, sex) REFERENCES Demographics(lga_code, lga_year, indigenous_status, sex)
 );

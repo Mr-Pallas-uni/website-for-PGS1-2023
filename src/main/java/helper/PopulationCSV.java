@@ -228,7 +228,7 @@ public class PopulationCSV {
                               + "'" + status[indexStatus] + "',"
                               + "'" + sex[indexSex] + "',"
                               + "'" + category[indexCategory] + "',"
-                              + count + ","
+                              + count
                               + ")";
 
                // Execute the INSERT
