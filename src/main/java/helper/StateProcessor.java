@@ -55,7 +55,7 @@ public class StateProcessor {
          Statement statement = connection.createStatement();
          for (int i = 0; i < stateCodes.length; i++) {
             String query = "INSERT into States VALUES ("
-                                + "'" + stateCodes[i] + "',"
+                                + "" + stateCodes[i] + ","
                                 + "'" + stateNames[i] + "',"
                                 + "'" + stateAbreviation[i] + "',"
                                 + ")";
