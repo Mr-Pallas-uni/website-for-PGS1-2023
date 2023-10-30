@@ -41,11 +41,11 @@ CREATE TABLE Personas (
 );
 
 CREATE TABLE PersonaAttributes (
-    PerName         TEXT NOT NULL,
     ID              INTEGER NOT NULL AUTO_INCREMENT,
+    PerName         TEXT NOT NULL,
     AttributeType   TEXT NOT NULL,
     Description     TEXT NOT NULL,
-    PRIMARY KEY (PerName, ID)
+    PRIMARY KEY (ID)
     FOREIGN KEY (PerName) REFERENCES Personas(PerName)
 );
 
