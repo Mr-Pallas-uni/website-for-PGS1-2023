@@ -5,12 +5,63 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
 
 public class PersonaProcessor {
 
    // MODIFY these to load/store to/from the correct locations
    private static final String DATABASE = "jdbc:sqlite:database/vtp.db";
+   //helper method to insert persona attributes
+   static void processAttributes(String name, String[] attr, String[] needs, String[] goals, String[] skills, Statement statement) {
+      try {
+         for (int i = 0; i < attr.length; i++) {
+            String query = "INSERT into PersonaAttributes VALUES ("
+                                    + "'" + name + "',"
+                                    + "'attributes',"
+                                    + "'" + attr[i] + "'"
+                                    + ")";
+            // Execute the INSERT
+            System.out.println("Executing: " + query);
+            statement.execute(query);
+         }
+
+         for (int i = 0; i < needs.length; i++) {
+            String query = "INSERT into PersonaAttributes VALUES ("
+                                    + "'" + name + "',"
+                                    + "'needs',"
+                                    + "'" + needs[i] + "'"
+                                    + ")";
+            // Execute the INSERT
+            System.out.println("Executing: " + query);
+            statement.execute(query);
+         }
+
+         for (int i = 0; i < goals.length; i++) {
+            String query = "INSERT into PersonaAttributes VALUES ("
+                                    + "'" + name + "',"
+                                    + "'goals',"
+                                    + "'" + goals[i] + "'"
+                                    + ")";
+            // Execute the INSERT
+            System.out.println("Executing: " + query);
+            statement.execute(query);
+         }
+
+         for (int i = 0; i < skills.length; i++) {
+            String query = "INSERT into PersonaAttributes VALUES ("
+                                    + "'" + name + "',"
+                                    + "'needs',"
+                                    + "'" + skills[i] + "'"
+                                    + ")";
+            // Execute the INSERT
+            System.out.println("Executing: " + query);
+            statement.execute(query);
+         }
+
+      }
+      catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
 
    public static void main (String[] args) {
       
@@ -155,29 +206,9 @@ public class PersonaProcessor {
          statement.execute(query3);
 
       //Inserting Persona Attributes
-      for (int i = 0; i < PerAttr1.length; i++) {
-         String attr1 = "INSERT into PersonaAttributes VALUES ("
-                                 + "'" + PerName3 + "',"
-                                 + "" + i + ","
-                                 + "'Attribute/Background',"
-                                 + "'" + PerAttr1[i] + "'"
-                                 + ")";
-         // Execute the INSERT
-         System.out.println("Executing: " + attr1);
-         statement.execute(attr1);
-      }
-      for (int i = 0; i < PerNeeds1.length; i++) {
-         String needs1 = "INSERT into PersonaAttributes VALUES ("
-                                 + "'" + PerName3 + "',"
-                                 + "" + i + ","
-                                 + "'Needs',"
-                                 + "'" + PerNeeds1[i] + "'"
-                                 + ")";
-         // Execute the INSERT
-         System.out.println("Executing: " + needs1);
-         statement.execute(needs1);
-      }
-
+         processAttributes(PerName1, PerAttr1, PerNeeds1, PerGoals1, PerSkills1, statement);
+         processAttributes(PerName2, PerAttr2, PerNeeds2, PerGoals2, PerSkills2, statement);
+         processAttributes(PerName3, PerAttr3, PerNeeds3, PerGoals3, PerSkills3, statement);
       }
        catch (Exception e) {
          e.printStackTrace();
