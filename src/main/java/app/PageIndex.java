@@ -36,7 +36,7 @@ public class PageIndex implements Handler {
 
         Map<String, Object> model = new HashMap<String, Object>();
 
-        model.put("title", new String("HomePage!!!!"));
+        model.put("title", new String("Welcome to our site."));
 
         ArrayList<State> states16 = jdbc.getStates(2016);
         int lgas16 = jdbc.countLGAs(2016);
