@@ -96,7 +96,8 @@ CREATE TABLE Population (
     lga_year          INTEGER NOT NULL,
     indigenous_status TEXT NOT NULL,
     sex               CHAR (1) NOT NULL,
-    age_category      TEXT NOT NULL,
+    age_min           INTEGER NOT NULL,
+    age_max           INTEGER NOT NULL,
     count             INTEGER NOT NULL,
     PRIMARY KEY (lga_code, lga_year, indigenous_status, sex, age_category)
     FOREIGN KEY (lga_code, lga_year, indigenous_status, sex) REFERENCES Demographics(lga_code, lga_year, indigenous_status, sex)

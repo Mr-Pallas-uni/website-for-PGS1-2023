@@ -154,7 +154,8 @@ public class PopulationCSV {
                               + year + ","
                               + "'" + status[indexStatus] + "',"
                               + "'" + sex[indexSex] + "',"
-                              + "'" + category[indexCategory] + "',"
+                              + age_min[indexCategory] + ","
+                              + age_max[indexCategory] + ","
                               + count
                               + ")";
 
