@@ -85,3 +85,22 @@ img.top-image {
 h2 {
    padding: 0.5em;
 }
+
+label{
+  display: inline-block;
+}
+.dataset {
+  display: none;
+}
+#genderstatus {
+  display:none;
+}
+
+#genderstatus select{
+  display:inline-block;
+}
+#dataset3 label {
+display:block;
+padding: .25em;
+
+}
