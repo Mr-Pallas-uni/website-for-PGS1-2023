@@ -4,3 +4,7 @@
    margin: auto;
    text-align: center;
 }
+.link-list li{
+   font-size: large;
+   padding: .2 rem;
+}
