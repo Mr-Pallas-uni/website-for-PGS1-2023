@@ -26,7 +26,7 @@
 
         gs.style.display = "block"
         d1.style.display = "none"
-        d2.style.display = "block"
+        d2.style.display = "inline-block"
         d3.style.display = "none"
     }
 
@@ -73,7 +73,7 @@
         </div>
 
         <div id= 'genderstatus' class='form-group'>
-            <label>Select Indigenous Status and Sex:</label>
+            <label>Select Indigenous Status and Sex:</label><br>
             <select id='gender_drop' name='gender_drop'>
                 <!-- This is where the movies types are populated -->
                 <option th:each="gender : ${gender_drop}" th:text="${gender}" ></option>
@@ -86,27 +86,57 @@
 
         <div class = dataset id=dataset1>
             <div class='form-group'>
-                <input type="number" min= "0">
+                <p>select the lowest level of school completion:</p>
+                <select id = "minSchool_drop", name = "minSchool_drop">
+                    <option value = "0">did not go to school</option>
+                    <option value = "1">year 8</option>
+                    <option value = "2">year 9</option>
+                    <option value = "3">year 10</option>
+                    <option value = "4">year 11</option>
+                    <option value = "5">year 12+</option>
+                </select>
+                <p>select the highest level of school completion:</p>
+                <select id = "maxSchool_drop", name = "maxSchool_drop">
+                    <option value = "0">did not go to school</option>
+                    <option value = "1">year 8</option>
+                    <option value = "2">year 9</option>
+                    <option value = "3">year 10</option>
+                    <option value = "4">year 11</option>
+                    <option value = "5">year 12+</option>
+                </select>
+
             </div>
             <button type='submit' class='btn btn-primary'>Submit</button>
         </div>
     
         <div class = dataset id=dataset2>
             <div class='form-group'>
-                <p>data2</p>
+                <p>select some levels of post-graduate degrees:</p>
+                <input type = "checkbox" id = "degree1" value="pd_gd_gc">
+                <label for="degree1">Postgraduate Degree, Graduate Diploma, and Graduate Certificate Level</label><br>
+                <input type = "checkbox" id = "degree2" value="bd">
+                <label for="degree2">Bachelors degree level</label><br>
+                <input type = "checkbox" id = "degree3" value="adip_dip">
+                <label for="degree3">Advanced diploma and diploma level</label><br>
+                <input type = "checkbox" id = "degree4" value="ct_i_ii">
+                <label for="degree4">certificate i & ii level</label><br>
+                <input type = "checkbox" id = "degree5" value="ct_iii_iv">
+                <label for="degree5">certificate iii & iv level</label><br>
+
             </div>
             <button type='submit' class='btn btn-primary'>Submit</button>
         </div>
 
         <div class = dataset id=dataset3>
             <div class='form-group'>
-                <p>data3</p>
+                <p for="min">select a minimum age:</p>
+                <input id = "min" type="number" min= "0" max = "200">
+                <p for="max">select a maximum age:</p>
+                <input id = "max" type="number" min= "0" max = "200">
             </div>
             <button type='submit' class='btn btn-primary'>Submit</button>
         </div>
     </form>
-
-
    </div>
 
    <div class='footer'>

@@ -1,11 +1,20 @@
 /* External CSS style file */
 
 label{
-   display: block;
+   display: inline-block;
 }
 .dataset {
    display: none;
 }
 #genderstatus {
    display:none;
+}
+
+#genderstatus select{
+   display:inline-block;
+}
+#dataset3 label {
+ display:block;
+ padding: .25em;
+
 }

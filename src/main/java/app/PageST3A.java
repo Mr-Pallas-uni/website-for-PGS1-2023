@@ -38,30 +38,30 @@ public class PageST3A implements Handler {
 
         model.put("title", new String("Change in the gap"));
 
-        String[] datasets = {"School Completion", "Non-School Completion", "Population"};
-        model.put("datasets_drop", datasets);
-
         ArrayList<String> sexes = jdbc.getGender();
         model.put("gender_drop", sexes);
         
         ArrayList<String> inds = jdbc.getIndigenous();
         model.put("indigenous_drop", inds);
-        
+
         String dataset = "Population";
         String datasets_drop = context.formParam("datasets_drop");
         if (datasets_drop == null || datasets_drop == "") {
-            model.put("add_form_data", 0);
+            System.out.print("lol");
 
         } else {
             switch(datasets_drop) {
                 case "School Completion":
                 dataset = "School_Completion";
+                System.out.print("dwdwdw");
 
                 case "Non-School Completion":
-                dataset = "NonSchoolCompletion";
+                    dataset = "NonSchoolCompletion";
+                    System.out.print("NS");
                 
                 case "Population":
                 dataset = "Population";
+                System.out.print("pop");
             }
 
         }
