@@ -41,7 +41,7 @@ CREATE TABLE Personas (
 );
 
 CREATE TABLE PersonaAttributes (
-    ID              INTEGER NOT NULL,
+    ID              INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     PerName         TEXT NOT NULL,
     AttributeType   TEXT NOT NULL,
     Description     TEXT NOT NULL,
