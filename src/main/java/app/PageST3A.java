@@ -1,6 +1,8 @@
 package app;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
@@ -25,67 +27,62 @@ public class PageST3A implements Handler {
     // URL of this page relative to http://localhost:7001/
     public static final String URL = "/page3A.html";
 
+    private static final String TEMPLATE = ("ST3A.html");
+
     @Override
     public void handle(Context context) throws Exception {
-        // Create a simple HTML webpage in a String
-        String html = "<html>";
 
-        // Add some Head information
-        html = html + "<head>" + 
-               "<title>Subtask 3.1</title>";
+        JDBCConnection jdbc = new JDBCConnection();
 
-        // Add some CSS (external file)
-        html = html + "<link rel='stylesheet' type='text/css' href='common.css' />";
-        html = html + "</head>";
+        Map<String, Object> model = new HashMap<String, Object>();
 
-        // Add the body
-        html = html + "<body>";
+        model.put("title", new String("Change in the gap"));
 
-        // Add the topnav
-        // This uses a Java v15+ Text Block
-        html = html + """
-            <div class='topnav'>
-                <a href='/'>Homepage</a>
-                <a href='mission.html'>Our Mission</a>
-                <a href='page2A.html'>Sub Task 2.A</a>
-                <a href='page2B.html'>Sub Task 2.B</a>
-                <a href='page3A.html'>Sub Task 3.A</a>
-                <a href='page3B.html'>Sub Task 3.B</a>
-            </div>
-        """;
+        String[] datasets = {"School Completion", "Non-School Completion", "Population"};
+        model.put("datasets_drop", datasets);
 
-        // Add header content block
-        html = html + """
-            <div class='header'>
-                <h1>Subtask 3.A</h1>
-            </div>
-        """;
-
-        // Add Div for page Content
-        html = html + "<div class='content'>";
-
-        // Add HTML for the page content
-        html = html + """
-            <p>Subtask 3.A page content</p>
-            """;
-
-        // Close Content div
-        html = html + "</div>";
-
-        // Footer
-        html = html + """
-            <div class='footer'>
-                <p>COSC2803 - Studio Project Starter Code (Sep23)</p>
-            </div>
-        """;
-
-        // Finish the HTML webpage
-        html = html + "</body>" + "</html>";
+        ArrayList<String> sexes = jdbc.getGender();
+        model.put("gender_drop", sexes);
         
+        ArrayList<String> inds = jdbc.getIndigenous();
+        model.put("indigenous_drop", inds);
+        
+        String dataset = "Population";
+        String datasets_drop = context.formParam("datasets_drop");
+        if (datasets_drop == null || datasets_drop == "") {
+            model.put("add_form_data", 0);
+
+        } else {
+            switch(datasets_drop) {
+                case "School Completion":
+                dataset = "School_Completion";
+
+                case "Non-School Completion":
+                dataset = "NonSchoolCompletion";
+                
+                case "Population":
+                dataset = "Population";
+            }
+
+        }
+
+        String gender = "f";
+        String gender_drop = context.formParam("gender_drop");
+        if (gender_drop == null || gender_drop == "") {
+        } else {
+            gender = gender_drop;
+        }
+
+        String status = "ind";
+        String status_drop = context.formParam("status_drop");
+        if (status_drop == null || status_drop == "") {
+        } else {
+            status = status_drop;
+        }
 
         // DO NOT MODIFY THIS
-        // Makes Javalin render the webpage
-        context.html(html);
+        // Makes Javalin render the webpage using Thymeleaf
+        context.render(TEMPLATE, model);
     }
 
 }
