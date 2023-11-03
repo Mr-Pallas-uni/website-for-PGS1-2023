@@ -39,6 +39,8 @@ public class PageMission implements Handler {
         model.put("title", new String("Our Mission"));
 
         
+
+        
         // DO NOT MODIFY THIS
         // Makes Javalin render the webpage using Thymeleaf
         context.render(TEMPLATE, model);
