@@ -38,19 +38,9 @@
 
       </div>
 
-      <div class="personas">
-         <div class="persona-text">
-            <h3 th:text="${name_1}" ></h3>
-
-            <h3>Attributes : </h3>
-            <ul>
-               <li th:each="attribute : ${attr_1}">
-                  <span th:text="${attribute}"></span>
-              </li>
-            </ul>
-         </div>
-         <div class="persona-image">
-            <img src="persona_1_image.jpg" alt="persona-1-image" class="persona-image">
+      <div class="persona" th:each="persona : ${persona}">
+         <div class="persona_1">
+            
          </div>
       </div>
 
