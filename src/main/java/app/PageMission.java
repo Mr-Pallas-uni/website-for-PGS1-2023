@@ -39,9 +39,36 @@ public class PageMission implements Handler {
         model.put("title", new String("Our Mission"));
 
         ArrayList<Persona> personas = jdbc.getPersona();
-        model.put("persona", personas.get(1));
+        model.put("persona_1", personas.get(0));
+        model.put("persona_2", personas.get(1));
+        model.put("persona_3", personas.get(2));
 
+        ArrayList<String> attr_1 = jdbc.getPersonaAttribute(personas.get(0).getName(), "attributes");
+        model.put("attr_1", attr_1);
+        ArrayList<String> need_1 = jdbc.getPersonaAttribute(personas.get(0).getName(), "needs");
+        model.put("need_1", need_1);
+        ArrayList<String> goal_1 = jdbc.getPersonaAttribute(personas.get(0).getName(), "goals");
+        model.put("goal_1", goal_1);
+        ArrayList<String> skill_1 = jdbc.getPersonaAttribute(personas.get(0).getName(), "skills");
+        model.put("skill_1", skill_1);
 
+        ArrayList<String> attr_2 = jdbc.getPersonaAttribute(personas.get(1).getName(), "attributes");
+        model.put("attr_2", attr_1);
+        ArrayList<String> need_2 = jdbc.getPersonaAttribute(personas.get(1).getName(), "needs");
+        model.put("need_2", need_1);
+        ArrayList<String> goal_2 = jdbc.getPersonaAttribute(personas.get(1).getName(), "goals");
+        model.put("goal_2", goal_1);
+        ArrayList<String> skill_2 = jdbc.getPersonaAttribute(personas.get(1).getName(), "skills");
+        model.put("skill_2", skill_1);
+
+        ArrayList<String> attr_3 = jdbc.getPersonaAttribute(personas.get(2).getName(), "attributes");
+        model.put("attr_3", attr_1);
+        ArrayList<String> need_3 = jdbc.getPersonaAttribute(personas.get(2).getName(), "needs");
+        model.put("need_3", need_1);
+        ArrayList<String> goal_3 = jdbc.getPersonaAttribute(personas.get(2).getName(), "goals");
+        model.put("goal_3", goal_1);
+        ArrayList<String> skill_3 = jdbc.getPersonaAttribute(personas.get(2).getName(), "skills");
+        model.put("skill_3", skill_1);
         
         // DO NOT MODIFY THIS
         // Makes Javalin render the webpage using Thymeleaf
