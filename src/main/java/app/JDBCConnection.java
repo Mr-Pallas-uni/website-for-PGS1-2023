@@ -328,6 +328,58 @@ public class JDBCConnection {
         // Finally we return all of the lga
         return sexes;
     }
+
+    public ArrayList<Persona> getPersona() {
+        ArrayList<Persona> personas = new ArrayList<Persona>();
+
+        // Setup the variable for the JDBC connection
+        Connection connection = null;
+
+        try {
+            // Connect to JDBC data base
+            connection = DriverManager.getConnection(JDBCConnection.DATABASE);
+
+            // Prepare a new SQL Query & Set a timeout
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+
+            // The Query
+            String query = "SELECT * FROM personas;";
+            
+            // Get Result
+            ResultSet results = statement.executeQuery(query);
+
+            // Process all of the results
+            while (results.next()) {
+                String name  = results.getString("PerName");
+                String image  = results.getString("perImagePath");
+                String credit  = results.getString("PerImageCredit");
+
+                // Add the lga object to the array
+                Persona persona = new Persona(name, image, credit);
+                personas.add(persona);
+            }
+
+            // Close the statement because we are done with it
+            statement.close();
+        } catch (SQLException e) {
+            // If there is an error, lets just pring the error
+            System.err.println(e.getMessage());
+        } finally {
+            // Safety code to cleanup
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                // connection close failed.
+                System.err.println(e.getMessage());
+            }
+        }
+
+        // Finally we return all of the lga
+        return personas;
+    }
 }
 
 

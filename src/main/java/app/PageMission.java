@@ -38,6 +38,10 @@ public class PageMission implements Handler {
 
         model.put("title", new String("Our Mission"));
 
+        ArrayList<Persona> personas = jdbc.getPersona();
+        model.put("persona", personas.get(1));
+
+
         
         // DO NOT MODIFY THIS
         // Makes Javalin render the webpage using Thymeleaf
