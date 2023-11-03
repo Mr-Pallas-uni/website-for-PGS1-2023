@@ -53,23 +53,25 @@ public class PageMission implements Handler {
         model.put("skill_1", skill_1);
 
         ArrayList<String> attr_2 = jdbc.getPersonaAttribute(personas.get(1).getName(), "attributes");
-        model.put("attr_2", attr_1);
+        model.put("attr_2", attr_2);
         ArrayList<String> need_2 = jdbc.getPersonaAttribute(personas.get(1).getName(), "needs");
-        model.put("need_2", need_1);
+        model.put("need_2", need_2);
         ArrayList<String> goal_2 = jdbc.getPersonaAttribute(personas.get(1).getName(), "goals");
-        model.put("goal_2", goal_1);
+        model.put("goal_2", goal_2);
         ArrayList<String> skill_2 = jdbc.getPersonaAttribute(personas.get(1).getName(), "skills");
-        model.put("skill_2", skill_1);
+        model.put("skill_2", skill_2);
 
         ArrayList<String> attr_3 = jdbc.getPersonaAttribute(personas.get(2).getName(), "attributes");
-        model.put("attr_3", attr_1);
+        model.put("attr_3", attr_3);
         ArrayList<String> need_3 = jdbc.getPersonaAttribute(personas.get(2).getName(), "needs");
-        model.put("need_3", need_1);
+        model.put("need_3", need_3);
         ArrayList<String> goal_3 = jdbc.getPersonaAttribute(personas.get(2).getName(), "goals");
-        model.put("goal_3", goal_1);
+        model.put("goal_3", goal_3);
         ArrayList<String> skill_3 = jdbc.getPersonaAttribute(personas.get(2).getName(), "skills");
-        model.put("skill_3", skill_1);
+        model.put("skill_3", skill_3);
         
+        Map<String, String> team = jdbc.getTeam();
+        model.put("team", team);
         // DO NOT MODIFY THIS
         // Makes Javalin render the webpage using Thymeleaf
         context.render(TEMPLATE, model);

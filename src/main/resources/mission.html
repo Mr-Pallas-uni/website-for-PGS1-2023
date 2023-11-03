@@ -163,7 +163,19 @@
    </div>
 
    <div class="team">
-      
+      <h3>Who we are : </h3>
+      <ul>
+         <li th:object="${team}">
+            <span th:text="${team.get('fname_1')}"></span> - <span th:text="${team.get('lname_1')}"></span>
+            <span th:text="${team.get('id_1')}"></span>
+            <span th:text="${team.get('id_1')}"></span><span>@student.rmit.edu.au</span>
+         </li>
+         <li th:object="${team}">
+            <span th:text="${team.get('fname_2')}"></span> - <span th:text="${team.get('lname_2')}"></span>
+            <span th:text="${team.get('id_2')}"></span>
+            <span th:text="${team.get('id_2')}"></span><span>@student.rmit.edu.au</span>
+         </li>
+      </ul>
    </div>
 
    <div class='footer'>
