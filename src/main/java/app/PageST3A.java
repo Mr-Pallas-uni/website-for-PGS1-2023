@@ -32,6 +32,17 @@ public class PageST3A implements Handler {
     @Override
     public void handle(Context context) throws Exception {
 
+        //for quick and easy mapping.
+        String schoolCategory[] = {
+            "did_not_go_to_school",
+            "y8_below",
+            "y9_equivalent",
+            "y10_equivalent",
+            "y11_equivalent",
+            "y12_equivalent"
+         };
+
+        
         JDBCConnection jdbc = new JDBCConnection();
 
         Map<String, Object> model = new HashMap<String, Object>();
@@ -44,28 +55,6 @@ public class PageST3A implements Handler {
         ArrayList<String> inds = jdbc.getIndigenous();
         model.put("indigenous_drop", inds);
 
-        String dataset = "Population";
-        String datasets_drop = context.formParam("datasets_drop");
-        if (datasets_drop == null || datasets_drop == "") {
-            System.out.print("lol");
-
-        } else {
-            switch(datasets_drop) {
-                case "School Completion":
-                dataset = "School_Completion";
-                System.out.print("dwdwdw");
-
-                case "Non-School Completion":
-                    dataset = "NonSchoolCompletion";
-                    System.out.print("NS");
-                
-                case "Population":
-                dataset = "Population";
-                System.out.print("pop");
-            }
-
-        }
-
         String gender = "f";
         String gender_drop = context.formParam("gender_drop");
         if (gender_drop == null || gender_drop == "") {
@@ -73,11 +62,46 @@ public class PageST3A implements Handler {
             gender = gender_drop;
         }
 
-        String status = "ind";
-        String status_drop = context.formParam("status_drop");
+        String status = "indig";
+        String status_drop = context.formParam("indigenous_drop");
         if (status_drop == null || status_drop == "") {
         } else {
             status = status_drop;
+        }
+
+        String dataset = "Population";
+        String conditions = "";
+        String datasets_drop = context.formParam("datasets_drop");
+        if (datasets_drop == null || datasets_drop == "") {
+            System.out.print("lol");
+
+        } else {
+            switch(datasets_drop) {
+                case "School Completion":
+                    dataset = "";
+                    int schoolMin = Integer.parseInt(context.formParam("minSchool_drop"));
+                    int schoolMax = Integer.parseInt(context.formParam("maxSchool_drop"));
+
+                                    //select statement missing as it will be added in the "getDiff method"
+
+                    break;
+
+                case "Non-School Completion":
+                    dataset = "NonSchoolCompletion";
+                    break;
+                
+                case "Population":
+                    dataset = "PopChange";
+
+                    conditions = " WHERE sex = '" + gender +"' AND age_min > " + 6 + " AND age_max < " + 50 + ";";
+                    break;
+            }
+
+            jdbc.getDiff(dataset, conditions);
+            
+            
+
+
         }
 
         // DO NOT MODIFY THIS

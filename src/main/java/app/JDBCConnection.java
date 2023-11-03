@@ -1,13 +1,13 @@
 package app;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class for Managing the JDBC Connection to a SQLLite Database.
@@ -486,6 +486,44 @@ public class JDBCConnection {
 
         // Finally we return all of the lga
         return personas;
+    }
+    public ArrayList<LGADiff> getDiff(String dataset, String conditions) {
+
+        ArrayList<LGADiff> LGADiffs = new ArrayList<LGADiff>();
+
+        // Connection connection = null;
+
+        // try {
+        //     connection = DriverManager.getConnection(JDBCConnection.DATABASE);
+
+        //     Statement statement = connection.createStatement();
+        //     statement.setQueryTimeout(30);
+
+        //     String query = "SELECT lgas1621.name, sum(c16) AS d16, sum(c21) d21, 100 * sum(totalDiff)/ sum(c16) AS perChange1621 FROM "
+        //      + dataset + " NATURAL JOIN lgas1621" + conditions ;
+            
+        //     ResultSet results = statement.executeQuery(query);
+
+        //     while (results.next()) {
+        //         String name  = results.getString("name");
+        //         int d16 = results.getInt("d16");
+        //         int d21 = results.getInt("d21");
+
+        //     }
+
+        //     statement.close();
+        // } catch (SQLException e) {
+        //     System.err.println(e.getMessage());
+        // } finally {
+        //     try {
+        //         if (connection != null) {
+        //             connection.close();
+        //         }
+        //     } catch (SQLException e) {
+        //         System.err.println(e.getMessage());
+        //     }
+        // }
+        return LGADiffs;
     }
 }
 
