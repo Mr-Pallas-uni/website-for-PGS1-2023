@@ -345,7 +345,7 @@ public class JDBCConnection {
 
             // The Query
             String query = "SELECT Description FROM personaAttributes \r\n"  +
-                            "WHERE PerName = '" + PersonaName +"'' AND AttributeType = '" + type + "'';";
+                            "WHERE PerName = '" + PersonaName +"' AND AttributeType = '" + type + "';";
             
             // Get Result
             ResultSet results = statement.executeQuery(query);
