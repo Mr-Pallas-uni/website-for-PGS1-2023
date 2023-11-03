@@ -93,7 +93,7 @@ public class PersonaProcessor {
       //Personae and attributes
 
       String Name1 = "Abed Muhammed";
-      String ImagePath1 = "src/main/resources/images/Persona_1_image.jpg";
+      String ImagePath1 = "Persona_1_image.jpg";
       String ImageCredit1 = "Photo by bruce mars on Unsplash";
       String Attr1[] = {
          "32 yrs old, male",
@@ -121,7 +121,7 @@ public class PersonaProcessor {
       };
 
       String Name2 = "Daniela Becker";
-      String ImagePath2 = "src/main/resources/images/Persona_2_image.jpg";
+      String ImagePath2 = "Persona_2_image.jpg";
       String ImageCredit2 = "NULL";
       String Attr2[] = {
          "Daniela is a 46-year-old customer sales representative for a pharmaceuticals company in Sydney. Ever since she was young, Daniela has enjoyed helping others; in high school she would help teachers and other students where she could. in university, she began tutoring the struggling students in her finance course, one of which is now her husband. Daniela`s 3 kids mean everything to her, and she consider herself very fortunate to have been able to give her children the lives they have. With the referendum looming, Daniela has decided to learn a little bit more about the indigenous population where she currently lives, Sydney, and where she was born, Dubbo, and how these places compare to the rest of Australia. Her youngest child has asthma and her oldest has an engineering doctorate, so she wants to find some statistics on these things as well as herself. ",
@@ -154,7 +154,7 @@ public class PersonaProcessor {
          "basic indigenous knowledge from regularly reading news articles on the web and life experience",
       };
       String Name3 = "Ollie Ramsey Jr";
-      String ImagePath3 = "src/main/resources/images/Persona_3_image.jpg";
+      String ImagePath3 = "Persona_3_image.jpg";
       String ImageCredit3 = "Photo by Andrea Piacquadio: https://www.pexels.com/photo/photo-of-man-holding-a-book-927022/";
       String Attr3[] = {
          "25 years old, male",
@@ -190,9 +190,9 @@ public class PersonaProcessor {
          connection = DriverManager.getConnection(DATABASE);
 
          //Inserting Personas
-         // processPersona(Name1, ImagePath1, ImageCredit1, connection);
-         // processPersona(Name2, ImagePath2, ImageCredit2, connection);
-         // processPersona(Name3, ImagePath3, ImageCredit3, connection);
+         processPersona(Name1, ImagePath1, ImageCredit1, connection);
+         processPersona(Name2, ImagePath2, ImageCredit2, connection);
+         processPersona(Name3, ImagePath3, ImageCredit3, connection);
 
          //Inserting Persona Attributes
          processAttributes(Name1, Attr1, Needs1, Goals1, Skills1, connection);
