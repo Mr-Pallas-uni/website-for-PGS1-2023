@@ -1,7 +1,8 @@
 package app;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.Map;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -327,6 +328,112 @@ public class JDBCConnection {
 
         // Finally we return all of the lga
         return sexes;
+    }
+
+    public Map<String, String> getTeam() {
+        Map<String, String> team = new HashMap<String, String>();
+
+        // Setup the variable for the JDBC connection
+        Connection connection = null;
+
+        try {
+            // Connect to JDBC data base
+            connection = DriverManager.getConnection(JDBCConnection.DATABASE);
+
+            // Prepare a new SQL Query & Set a timeout
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+
+            // The Query
+            String query = "SELECT * FROM teammembers;";
+            
+            // Get Result
+            ResultSet results = statement.executeQuery(query);
+
+            // Process all of the results
+            String member = "1";
+            while (results.next()) {
+                String id  = results.getString("MemberID");
+                String fName  = results.getString("FirstName");
+                String lName  = results.getString("LastName");
+
+                // Add to the map
+                team.put("id_" + member, id);
+                team.put("fname_" + member, fName);
+                team.put("lname_" + member, lName);
+
+                member = "2";
+            }
+
+            // Close the statement because we are done with it
+            statement.close();
+        } catch (SQLException e) {
+            // If there is an error, lets just pring the error
+            System.err.println(e.getMessage());
+        } finally {
+            // Safety code to cleanup
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                // connection close failed.
+                System.err.println(e.getMessage());
+            }
+        }
+
+        // Finally we return all of the lga
+        return team;
+    }
+
+    public ArrayList<String> getPersonaAttribute(String PersonaName, String type) {
+        ArrayList<String> attributes = new ArrayList<String>();
+
+        // Setup the variable for the JDBC connection
+        Connection connection = null;
+
+        try {
+            // Connect to JDBC data base
+            connection = DriverManager.getConnection(JDBCConnection.DATABASE);
+
+            // Prepare a new SQL Query & Set a timeout
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+
+            // The Query
+            String query = "SELECT Description FROM personaAttributes \r\n"  +
+                            "WHERE PerName = '" + PersonaName +"' AND AttributeType = '" + type + "';";
+            
+            // Get Result
+            ResultSet results = statement.executeQuery(query);
+
+            // Process all of the results
+            while (results.next()) {
+                String attribute  = results.getString("Description");
+
+                // Add the lga object to the array
+                attributes.add(attribute);
+            }
+
+            // Close the statement because we are done with it
+            statement.close();
+        } catch (SQLException e) {
+            // If there is an error, lets just pring the error
+            System.err.println(e.getMessage());
+        } finally {
+            // Safety code to cleanup
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                // connection close failed.
+                System.err.println(e.getMessage());
+            }
+        }
+
+        // Finally we return all of the lga
+        return attributes;
     }
 
     public ArrayList<Persona> getPersona() {

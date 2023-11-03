@@ -38,13 +38,145 @@
 
       </div>
 
-      <div class="persona" th:each="persona : ${persona}">
-         <div class="persona_1">
-            
+      <div class="personas">
+         <h2>Who this website is built for</h2>
+         <div class="persona-1" th:object="${persona_1}">
+
+            <div class="persona-text">
+               <h3 th:text="${persona_1.getName()}" class="persona-name"></h3>
+
+               <h5 class="persona-attr-title">Attributes</h5>
+               <ul class="attributes">
+                  <li th:each="attribute : ${attr_1}">
+                     <span th:text="${attribute}"></span>
+                  </li>
+               </ul>
+
+               <h5 class="persona-attr-title">Needs</h5>
+               <ul class="attributes">
+                  <li th:each="need : ${need_1}">
+                     <span th:text="${need}"></span>
+                  </li>
+               </ul>
+
+               <h5 class="persona-attr-title">Goals</h5>
+               <ul class="attributes">
+                  <li th:each="goal : ${goal_1}">
+                     <span th:text="${goal}"></span>
+                  </li>
+               </ul>
+
+               <h5 class="persona-attr-title">Skills</h5>
+               <ul class="attributes">
+                  <li th:each="skill : ${skill_1}">
+                     <span th:text="${skill}"></span>
+                  </li>
+               </ul>
+            </div>
+
+            <div class="persona-image">
+               <img th:src="${persona_1.getImage()}" alt="persona 1 image" width="240px">
+               <div class="credit" th:text="${persona_1.getCredit()}"></div>
+            </div>
+         </div>
+
+         <div class="persona-2" th:object="${persona_2}">
+
+            <div class="persona-text">
+               <h3 th:text="${persona_2.getName()}" class="persona-name"></h3>
+
+               <h5 class="persona-attr-title">Attributes</h5>
+               <ul class="attributes">
+                  <li th:each="attribute : ${attr_2}">
+                     <span th:text="${attribute}"></span>
+                  </li>
+               </ul>
+
+               <h5 class="persona-attr-title">Needs</h5>
+               <ul class="attributes">
+                  <li th:each="need : ${need_2}">
+                     <span th:text="${need}"></span>
+                  </li>
+               </ul>
+
+               <h5 class="persona-attr-title">Goals</h5>
+               <ul class="attributes">
+                  <li th:each="goal : ${goal_2}">
+                     <span th:text="${goal}"></span>
+                  </li>
+               </ul>
+
+               <h5 class="persona-attr-title">Skills</h5>
+               <ul class="attributes">
+                  <li th:each="skill : ${skill_2}">
+                     <span th:text="${skill}"></span>
+                  </li>
+               </ul>
+            </div>
+
+            <div class="persona-image">
+               <img th:src="${persona_2.getImage()}" alt="persona 2 image" width="240px">
+               <div class="credit" th:text="${persona_2.getCredit()}"></div>
+            </div>
          </div>
       </div>
 
-      <div class="team"></div>
+      <div class="persona-3" th:object="${persona_3}">
+
+         <div class="persona-text">
+            <h3 th:text="${persona_3.getName()}" class="persona-name"></h3>
+
+            <h5 class="persona-attr-title">Attributes</h5>
+            <ul class="attributes">
+               <li th:each="attribute : ${attr_3}">
+                  <span th:text="${attribute}"></span>
+               </li>
+            </ul>
+
+            <h5 class="persona-attr-title">Needs</h5>
+            <ul class="attributes">
+               <li th:each="need : ${need_3}">
+                  <span th:text="${need}"></span>
+               </li>
+            </ul>
+
+            <h5 class="persona-attr-title">Goals</h5>
+            <ul class="attributes">
+               <li th:each="goal : ${goal_3}">
+                  <span th:text="${goal}"></span>
+               </li>
+            </ul>
+
+            <h5 class="persona-attr-title">Skills</h5>
+            <ul class="attributes">
+               <li th:each="skill : ${skill_3}">
+                  <span th:text="${skill}"></span>
+               </li>
+            </ul>
+         </div>
+
+         <div class="persona-image">
+            <img th:src="${persona_3.getImage()}" alt="persona 2 image" width="240px">
+            <div class="credit" th:text="${persona_3.getCredit()}"></div>
+         </div>
+      </div>
+   </div>
+
+   <div class="team">
+      <h3>Who we are : </h3>
+      <ul>
+         <li th:object="${team}">
+            <span th:text="${team.get('fname_1')}"></span> - <span th:text="${team.get('lname_1')}"></span>
+            <span th:text="${team.get('id_1')}"></span>
+            <span th:text="${team.get('id_1')}"></span><span>@student.rmit.edu.au</span>
+         </li>
+         <li th:object="${team}">
+            <span th:text="${team.get('fname_2')}"></span> - <span th:text="${team.get('lname_2')}"></span>
+            <span th:text="${team.get('id_2')}"></span>
+            <span th:text="${team.get('id_2')}"></span><span>@student.rmit.edu.au</span>
+         </li>
+      </ul>
+   </div>
 
    <div class='footer'>
       <p>COSC2803 - studio project</p>
