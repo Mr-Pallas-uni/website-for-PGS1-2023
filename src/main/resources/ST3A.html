@@ -26,10 +26,11 @@
 
   <div class='content'>
 
-    <form action='/page3A.html' method = 'post'>
+    <!-- data set 1 form-->
+    <form action='/page3A.html' method = 'post' class = 'container'>
         <div class='form-group'>
-            <label for='datasets_drop'>Select the Dataset:</label>
-            <select id='datasets_drop' name='datasets_drop' onchange="data(event)">
+            <label for='datasets_drop1'>Select the Dataset:</label>
+            <select id='datasets_drop1' name='datasets_drop1' onchange="data(event)">
                 <!-- This is where the movies types are populated -->
                 <option>School Completion</option>
                 <option>Non-School Completion</option>
@@ -37,26 +38,48 @@
             </select>
         </div>
 
-        <div id= 'genderstatus'>
+        <div class="break"></div>
+
+        <label for='genderstatus1'>select the first group for comparison</label>
+        <div id= 'genderstatus1'>
+            <label for='genderstatus1'>select the first group for comparison</label>
             <div class='form-group'>
-                <label for='gender_drop'>Select Sex</label><br>
-                <select id='gender_drop' name='gender_drop'>
+                <label for='gender_drop1'>Select Sex</label><br>
+                <select id='gender_drop1' name='gender_drop1'>
                     <!-- This is where the movies types are populated -->
-                    <option th:each="gender : ${gender_drop}" th:text="${gender}" ></option>
+                    <option th:each="gender : ${gender_drop1}" th:text="${gender}" ></option>
                 </select>
             <br>
-                <label for='indigenous_drop'>Select Indigenous Status</label>
-                <select id='indigenous_drop' name='indigenous_drop'>
+                <label for='indigenous_drop1'>Select Indigenous Status</label>
+                <select id='indigenous_drop1' name='indigenous_drop1'>
                     <!-- This is where the movies types are populated -->
-                    <option th:each="status : ${indigenous_drop}" th:text="${status}" ></option>
+                    <option th:each="status : ${indigenous_drop1}" th:text="${status}" ></option>
+                </select>
+            </div>
+        </div>
+        <div id= 'genderstatus2'>
+            <label for='genderstatus2'>select the second group for comparison</label>
+            <div class='form-group'>
+                <label for='gender_drop2'>Select Sex</label><br>
+                <select id='gender_drop2' name='gender_drop2'>
+                    <!-- This is where the movies types are populated -->
+                    <option th:each="gender : ${gender_drop2}" th:text="${gender}" ></option>
+                </select>
+            <br>
+                <label for='indigenous_drop2'>Select Indigenous Status</label>
+                <select id='indigenous_drop2' name='indigenous_drop2'>
+                    <!-- This is where the movies types are populated -->
+                    <option th:each="status : ${indigenous_drop2}" th:text="${status}" ></option>
                 </select>
             </div>
         </div>
 
+        <div class="break"></div>
+
         <div id=dataset1>
             <div class='form-group'>
-                <label for='minSchool_drop'>select the lowest level of school completion:</label>
-                <select id = "minSchool_drop" name = "minSchool_drop">
+                <label for='minSchool_drop1'>select the lowest level of school completion:</label>
+                <select id = "minSchool_drop1" name = "minSchool_drop1">
                     <option value = "0">did not go to school</option>
                     <option value = "1">year 8</option>
                     <option value = "2">year 9</option>
@@ -65,8 +88,8 @@
                     <option value = "5">year 12+</option>
                 </select>
                 <br>
-                <label for="maxSchool_drop">select the highest level of school completion:</label>
-                <select id = "maxSchool_drop" name = "maxSchool_drop">
+                <label for="maxSchool_drop1">select the highest level of school completion:</label>
+                <select id = "maxSchool_drop1" name = "maxSchool_drop1">
                     <option value = "0">did not go to school</option>
                     <option value = "1">year 8</option>
                     <option value = "2">year 9</option>
@@ -82,26 +105,26 @@
         <div id=dataset2>
             <div class='form-group'>
                 <p>select some levels of post-graduate degrees:</p>
-                <input type = "checkbox" id = "degree1" value="pd_gd_gc">
-                <label for="degree1">Postgraduate Degree, Graduate Diploma, and Graduate Certificate Level</label><br>
-                <input type = "checkbox" id = "degree2" value="bd">
-                <label for="degree2">Bachelors degree level</label><br>
-                <input type = "checkbox" id = "degree3" value="adip_dip">
-                <label for="degree3">Advanced diploma and diploma level</label><br>
-                <input type = "checkbox" id = "degree4" value="ct_i_ii">
-                <label for="degree4">certificate i & ii level</label><br>
-                <input type = "checkbox" id = "degree5" value="ct_iii_iv">
-                <label for="degree5">certificate iii & iv level</label><br>
+                <input type = "checkbox" id = "degree11" value="pd_gd_gc">
+                <label for="degree11">Postgraduate Degree, Graduate Diploma, and Graduate Certificate Level</label><br>
+                <input type = "checkbox" id = "degree21" value="bd">
+                <label for="degree21">Bachelors degree level</label><br>
+                <input type = "checkbox" id = "degree31" value="adip_dip">
+                <label for="degree31">Advanced diploma and diploma level</label><br>
+                <input type = "checkbox" id = "degree41" value="ct_i_ii">
+                <label for="degree41">certificate i & ii level</label><br>
+                <input type = "checkbox" id = "degree51" value="ct_iii_iv">
+                <label for="degree51">certificate iii & iv level</label><br>
             </div>
             <button type='submit' class='btn btn-primary'>Submit</button>
         </div>
 
         <div id=dataset3>
             <div class='form-group'>
-                <label for="min">select a minimum age:</label>
-                <input id = "min" type="number" min= "0" max = "200">
-                <label for="max">select a maximum age:</label>
-                <input id = "max" type="number" min= "0" max = "200">
+                <label for="min1">select a minimum age:</label>
+                <input id = "min1" type="number" min= "0" max = "200">
+                <label for="max1">select a maximum age:</label>
+                <input id = "max1" type="number" min= "0" max = "200">
             </div>
             <button type='submit' class='btn btn-primary'>Submit</button>
         </div>
@@ -130,9 +153,7 @@
             var d1 = document.getElementById("dataset1");
             var d2 = document.getElementById("dataset2");
             var d3 = document.getElementById("dataset3");
-            var gs = document.getElementById("genderstatus");
             
-            gs.style.display = "block"
             d1.style.display = "block"
             d2.style.display = "none"
             d3.style.display = "none"
@@ -142,9 +163,7 @@
             var d1 = document.getElementById("dataset1");
             var d2 = document.getElementById("dataset2");
             var d3 = document.getElementById("dataset3");
-            var gs = document.getElementById("genderstatus");
     
-            gs.style.display = "block"
             d1.style.display = "none"
             d2.style.display = "block"
             d3.style.display = "none"
@@ -154,9 +173,7 @@
             var d1 = document.getElementById("dataset1")
             var d2 = document.getElementById("dataset2")
             var d3 = document.getElementById("dataset3")
-            var gs = document.getElementById("genderstatus")
 
-            gs.style.display = "block"
             d1.style.display = "none"
             d2.style.display = "none"
             d3.style.display = "block"

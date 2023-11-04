@@ -49,24 +49,52 @@ public class PageST3A implements Handler {
 
         model.put("title", new String("Change in the gap"));
 
-        ArrayList<String> sexes = jdbc.getGender();
-        model.put("gender_drop", sexes);
+        ArrayList<String> sexes = new ArrayList<String>();
+        sexes.add("Male");
+        sexes.add("Female");
+        sexes.add("Both");
+        model.put("gender_drop1", sexes);
         
-        ArrayList<String> inds = jdbc.getIndigenous();
-        model.put("indigenous_drop", inds);
+        ArrayList<String> inds = new ArrayList<String>();
+        inds.add("Indigenous");
+        inds.add("Non-Indigenous");
+        inds.add("Both");
 
-        String gender = "f";
-        String gender_drop = context.formParam("gender_drop");
+        model.put("indigenous_drop1", inds);
+
+        String gender = "Male";
+        String gender_drop = context.formParam("gender_drop1");
         if (gender_drop == null || gender_drop == "") {
         } else {
-            gender = gender_drop;
+            switch(gender_drop) {
+                case "Male":
+                    gender = "m";
+                    break;
+                case "Female":
+                    gender = "f";
+                    break;
+                case "Both":
+                    gender = "Both";
+                    break;
+            }
         }
 
         String status = "indig";
-        String status_drop = context.formParam("indigenous_drop");
+        String status_drop = context.formParam("indigenous_drop1");
         if (status_drop == null || status_drop == "") {
         } else {
-            status = status_drop;
+            switch(status_drop) {
+                case "Indigenous":
+                    status = "indig";
+                    break;
+                case "Non-Indigenous":
+                    status = "non_indig";
+                    break;
+                case "Both":
+                    status = "Both";
+                    break;
+
+            }
         }
 
         String dataset = "Population";
