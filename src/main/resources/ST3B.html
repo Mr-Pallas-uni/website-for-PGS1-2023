@@ -9,7 +9,34 @@
    <link rel='stylesheet' type='text/css' href='common.css' />
    <link rel='stylesheet' type='text/css' href='ST3A.css' />
 
-   <script type="text/javascript" src="ST3B.js"></script> 
+   <script>
+        function showFields(generalfield, selectedfield, submitBtn) {  // handles dataset specific fields
+            defaultfield.classList.remove("hidden");
+            selectedfield.classList.remove("hidden");
+            submitBtn.classList.remove("hidden");
+        }
+        function hideAllFields() {
+            document.getElementById("indig-status-field").classList.add("hidden");
+            document.getElementById("Population-field").classList.add("hidden");
+            document.getElementById("school-completion-field").classList.add("hidden");
+            document.getElementById("non-school-completion-field").classList.add("hidden");
+            document.getElementById("Health-condition-field").classList.add("hidden");
+        }
+
+        document.getElementById("select-dataset-field").addEventListener("change", function () {
+            let selectedOption = this.value;
+            selectedOption = document.getElementById(selectedOption);
+            let generalField = document.getElementById("indig-status-field");
+            let submitBtn = document.getElementById("3BformSubmit");
+
+            // Hide all option-specific fields first
+            //hideAllFields();
+
+            // Show the fields based on the selected option
+            showFields(generalField, selectedOption, submitBtn);
+            
+        });
+   </script>
 
 </head>
 
@@ -30,16 +57,38 @@
   <div class='content'>
 
     <form id="3Bform" action="/page3B.html" method="post">
+
         <div class="form-group">
-            <label for="selectDataset">Select a dataset to get started :</label>
-            <select name="selectDataset" id="selectDataset">
-                <option onclick="">School Completion</option>
-                <option onclick="">Non-School Completion</option>
-                <option onclick="">Population</option>
-                <option onclick="">Health Condition</option>
+            <label for="select-dataset-field">Select a dataset to get started :</label>
+            <select name="select-dataset-field" id="select-dataset-field">
+                <option value="school-completion-field">School Completion</option>
+                <option value="non-school-completion-field">Non-School Completion</option>
+                <option value="Population-field">Population</option>
+                <option value="Health-condition-field">Health Condition</option>
             </select>
         </div>
+
+        <div id="indig-status-field" class="form-group hidden">
+            <h4>indig status</h4>
+        </div>
+
+        <div id="Population-field" class="form-group hidden">
+            <h4>pop field</h4>
+        </div>
+
+        <div id="school-completion-field" class="form-group hidden">
+            <h4>school completion field</h4>
+        </div>
+
+        <div id="non-school-completion-field" class="form-group hidden">
+            <h4>non school completion field</h4>
+        </div>
+
+        <div id="Health-condition-field" class="form-group hidden">
+            <h4>health fields</h4>
+        </div>
         
+        <input id="3BformSubmit" type="submit" value="submit" class="submit-btn hidden">
     </form>
 
     <div id = "Error message">
@@ -52,5 +101,6 @@
       <p>COSC2803 - studio project</p>
    </div>
 
+   <script type="text/javascript" src="ST3B.js"></script> 
 </body>
 </html>
