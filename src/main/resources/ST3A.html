@@ -1,55 +1,16 @@
 <!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <meta http-equiv="content-type" content="text/html; charset=utf-8">
    <meta name="viewport" content="width=device-width">
-
    <title>Homepage</title>
    
-   <link rel='stylesheet' type='text/css' href='common.css' />
-   <link rel='stylesheet' type='text/css' href='ST3A.css' />
-
-   <script>
-    function data1() {
-        var d1 = document.getElementById("dataset1");
-        var d2 = document.getElementById("dataset2");
-        var d3 = document.getElementById("dataset3");
-        var gs = document.getElementById("genderstatus")
-        
-        gs.style.display = "block"
-        d1.style.display = "block"
-        d2.style.display = "none"
-        d3.style.display = "none"
-    }
-
-    function data2() {
-        var d1 = document.getElementById("dataset1");
-        var d2 = document.getElementById("dataset2");
-        var d3 = document.getElementById("dataset3");
-        var gs = document.getElementById("genderstatus")
-
-        gs.style.display = "block"
-        d1.style.display = "none"
-        d2.style.display = "inline-block"
-        d3.style.display = "none"
-    }
-
-    function data3() {
-        var d1 = document.getElementById("dataset1");
-        var d2 = document.getElementById("dataset2");
-        var d3 = document.getElementById("dataset3");
-        var gs = document.getElementById("genderstatus")
-        
-        gs.style.display = "block"
-        d1.style.display = "none"
-        d2.style.display = "none"
-        d3.style.display = "block"
-    }
-    </script> 
+   <link rel='stylesheet' type='text/css' href='common.css'>
+   <link rel='stylesheet' type='text/css' href='ST3A.html'>
 
 </head>
 
-<body>
+<body onload="data1()">
    <div class='topnav'>
       <a href='/'>Homepage</a>
       <a href='mission.html'>Our Mission</a>
@@ -61,38 +22,41 @@
    
    <div class='header'>
       <h1 th:text="${title}"></h1>
-  </div>
+   </div>
 
   <div class='content'>
 
     <form action='/page3A.html' method = 'post'>
         <div class='form-group'>
             <label for='datasets_drop'>Select the Dataset:</label>
-            <select id='datasets_drop' name='datasets_drop'>
+            <select id='datasets_drop' name='datasets_drop' onchange="data(event)">
                 <!-- This is where the movies types are populated -->
-                <option onclick="data1()">School Completion</option>
-                <option onclick="data2()">Non-School Completion</option>
-                <option onclick="data3()">Population</option>
+                <option>School Completion</option>
+                <option>Non-School Completion</option>
+                <option>Population</option>
             </select>
         </div>
 
-        <div id= 'genderstatus' class='form-group'>
-            <label for='gender_drop'>Select Indigenous Status</label><br>
-            <select id='gender_drop' name='gender_drop'>
-                <!-- This is where the movies types are populated -->
-                <option th:each="gender : ${gender_drop}" th:text="${gender}" ></option>
-            </select>
-            <label for='indigenous_drop'>Select Sex</label>
-            <select id='indigenous_drop' name='indigenous_drop'>
-                <!-- This is where the movies types are populated -->
-                <option th:each="status : ${indigenous_drop}" th:text="${status}" ></option>
-            </select>
+        <div id= 'genderstatus'>
+            <div class='form-group'>
+                <label for='gender_drop'>Select Sex</label><br>
+                <select id='gender_drop' name='gender_drop'>
+                    <!-- This is where the movies types are populated -->
+                    <option th:each="gender : ${gender_drop}" th:text="${gender}" ></option>
+                </select>
+            <br>
+                <label for='indigenous_drop'>Select Indigenous Status</label>
+                <select id='indigenous_drop' name='indigenous_drop'>
+                    <!-- This is where the movies types are populated -->
+                    <option th:each="status : ${indigenous_drop}" th:text="${status}" ></option>
+                </select>
+            </div>
         </div>
 
-        <div class = dataset id=dataset1>
+        <div id=dataset1>
             <div class='form-group'>
                 <label for='minSchool_drop'>select the lowest level of school completion:</label>
-                <select id = "minSchool_drop", name = "minSchool_drop">
+                <select id = "minSchool_drop" name = "minSchool_drop">
                     <option value = "0">did not go to school</option>
                     <option value = "1">year 8</option>
                     <option value = "2">year 9</option>
@@ -100,8 +64,9 @@
                     <option value = "4">year 11</option>
                     <option value = "5">year 12+</option>
                 </select>
+                <br>
                 <label for="maxSchool_drop">select the highest level of school completion:</label>
-                <select id = "maxSchool_drop", name = "maxSchool_drop">
+                <select id = "maxSchool_drop" name = "maxSchool_drop">
                     <option value = "0">did not go to school</option>
                     <option value = "1">year 8</option>
                     <option value = "2">year 9</option>
@@ -114,7 +79,7 @@
             <button type='submit' class='btn btn-primary'>Submit</button>
         </div>
     
-        <div class = dataset id=dataset2>
+        <div id=dataset2>
             <div class='form-group'>
                 <p>select some levels of post-graduate degrees:</p>
                 <input type = "checkbox" id = "degree1" value="pd_gd_gc">
@@ -131,7 +96,7 @@
             <button type='submit' class='btn btn-primary'>Submit</button>
         </div>
 
-        <div class = dataset id=dataset3>
+        <div id=dataset3>
             <div class='form-group'>
                 <label for="min">select a minimum age:</label>
                 <input id = "min" type="number" min= "0" max = "200">
@@ -142,12 +107,62 @@
         </div>
     </form>
 
-    <div id = "Error message">
+    <div id = "Error">
         nothing for now lol
     </div>
    </div>
 
    <div class='footer'>
+    <script>
+        function data(event) {
+            if (event.target.value === "School Completion") {
+                data1();
+            }
+            else if (event.target.value === "Non-School Completion") {
+                data2();
+            }
+            else if (event.target.value === "Population") {
+                data3();
+            }
+            
+        }
+        function data1() {
+            var d1 = document.getElementById("dataset1");
+            var d2 = document.getElementById("dataset2");
+            var d3 = document.getElementById("dataset3");
+            var gs = document.getElementById("genderstatus");
+            
+            gs.style.display = "block"
+            d1.style.display = "block"
+            d2.style.display = "none"
+            d3.style.display = "none"
+        }
+    
+        function data2() {
+            var d1 = document.getElementById("dataset1");
+            var d2 = document.getElementById("dataset2");
+            var d3 = document.getElementById("dataset3");
+            var gs = document.getElementById("genderstatus");
+    
+            gs.style.display = "block"
+            d1.style.display = "none"
+            d2.style.display = "block"
+            d3.style.display = "none"
+        }
+    
+        function data3() {
+            var d1 = document.getElementById("dataset1")
+            var d2 = document.getElementById("dataset2")
+            var d3 = document.getElementById("dataset3")
+            var gs = document.getElementById("genderstatus")
+
+            gs.style.display = "block"
+            d1.style.display = "none"
+            d2.style.display = "none"
+            d3.style.display = "block"
+    
+        }
+        </script> 
       <p>COSC2803 - studio project</p>
    </div>
 
