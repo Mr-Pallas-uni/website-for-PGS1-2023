@@ -53,7 +53,9 @@ public class PageST3A implements Handler {
         sexes.add("Male");
         sexes.add("Female");
         sexes.add("Both");
+
         model.put("gender_drop1", sexes);
+        model.put("gender_drop2", sexes);
         
         ArrayList<String> inds = new ArrayList<String>();
         inds.add("Indigenous");
@@ -61,75 +63,159 @@ public class PageST3A implements Handler {
         inds.add("Both");
 
         model.put("indigenous_drop1", inds);
+        model.put("indigenous_drop2", inds);
 
-        String gender = "Male";
+        String gender1 = "m";
         String gender_drop = context.formParam("gender_drop1");
         if (gender_drop == null || gender_drop == "") {
         } else {
             switch(gender_drop) {
                 case "Male":
-                    gender = "m";
+                    gender1 = "m";
                     break;
                 case "Female":
-                    gender = "f";
+                    gender1 = "f";
                     break;
                 case "Both":
-                    gender = "Both";
+                    gender1 = "Both";
                     break;
             }
         }
 
-        String status = "indig";
-        String status_drop = context.formParam("indigenous_drop1");
-        if (status_drop == null || status_drop == "") {
+        String gender2 = "m";
+        String gender_drop2 = context.formParam("gender_drop2");
+        if (gender_drop2 == null || gender_drop2 == "") {
         } else {
-            switch(status_drop) {
+            switch(gender_drop2) {
+                case "Male":
+                    gender2 = "m";
+                    break;
+                case "Female":
+                    gender2 = "f";
+                    break;
+                case "Both":
+                    gender2 = "Both";
+                    break;
+            }
+        }
+
+        String status1 = "indig";
+        String status_drop1 = context.formParam("indigenous_drop1");
+        if (status_drop1 == null || status_drop1 == "") {
+        } else {
+            switch(status_drop1) {
                 case "Indigenous":
-                    status = "indig";
+                    status1 = "indig";
                     break;
                 case "Non-Indigenous":
-                    status = "non_indig";
+                    status1 = "non_indig";
                     break;
                 case "Both":
-                    status = "Both";
+                    status1 = "Both";
                     break;
 
             }
         }
 
+        String status2 = "indig";
+        String status_drop2 = context.formParam("indigenous_drop1");
+        if (status_drop2 == null || status_drop2 == "") {
+        } else {
+            switch(status_drop2) {
+                case "Indigenous":
+                    status2 = "indig";
+                    break;
+                case "Non-Indigenous":
+                    status2 = "non_indig";
+                    break;
+                case "Both":
+                    status2 = "Both";
+                    break;
+
+            }
+        }
+        ArrayList<String> diffs16 = new ArrayList<>();
         String dataset = "Population";
         String conditions = "";
         String datasets_drop = context.formParam("datasets_drop");
         if (datasets_drop == null || datasets_drop == "") {
-            System.out.print("lol");
+            System.out.print("no dataset");
 
         } else {
+            String temp;
             switch(datasets_drop) {
                 case "School Completion":
-                    dataset = "";
-                    int schoolMin = Integer.parseInt(context.formParam("minSchool_drop"));
-                    int schoolMax = Integer.parseInt(context.formParam("maxSchool_drop"));
+                    dataset = datasets_drop;
+                    int schoolMin;
+                    int schoolMax;
 
-                                    //select statement missing as it will be added in the "getDiff method"
+                    temp = context.formParam("minSchool_drop");
+                    System.out.println("temp:" + temp);
+                    if (temp == null || temp == ""){
+                        System.out.println("no min");
+                    }
+                    else {
+                        schoolMin = Integer.parseInt(temp);
+                        System.out.println(schoolMin);
+                    }
 
+                    temp = context.formParam("maxSchool_drop");
+                    if (temp == null || temp == ""){
+                        System.out.println("no max");
+                    }
+                    else {
+                        schoolMax = Integer.parseInt(temp);
+                        System.out.println(schoolMax);
+
+                    }
+
+                    //select statement missing as it will be added in the "getDiff method"
+                    System.out.print(dataset);
                     break;
 
                 case "Non-School Completion":
-                    dataset = "NonSchoolCompletion";
+                    dataset = datasets_drop;
+                                                    System.out.print(dataset);
+
                     break;
                 
                 case "Population":
-                    dataset = "PopChange";
+                    dataset = datasets_drop;
 
-                    conditions = " WHERE sex = '" + gender +"' AND age_min > " + 6 + " AND age_max < " + 50 + ";";
+                    int ageMin;
+                    int ageMax;
+
+                    temp = context.formParam("min");
+                    System.out.println("temp:" + temp);
+                    if (temp == null || temp == ""){
+                        System.out.println("no min");
+                    }
+                    else {
+                        ageMin = Integer.parseInt(temp);
+                        conditions += " AND d1.age_min > " + ageMin;
+                        System.out.println("ageMin" +ageMin);
+                    }
+
+                    temp = context.formParam("max");
+                    System.out.println("temp:" + temp);
+                    if (temp == null || temp == ""){
+                        System.out.println("no max");
+                    }
+                    else {
+                        ageMax = Integer.parseInt(temp);
+                        conditions += " AND d1.age_max < " + ageMax;
+                        System.out.println("ageMax" + ageMax);
+
+                    }
+                    
+                                                    System.out.print(dataset);
+
                     break;
+            
             }
 
-            jdbc.getDiff(dataset, conditions);
-            
-            
-
-
+            diffs16 = jdbc.getDiff(dataset, gender1, gender2, status1, status2, conditions);
+            model.put("diffs16", diffs16);
         }
 
         // DO NOT MODIFY THIS

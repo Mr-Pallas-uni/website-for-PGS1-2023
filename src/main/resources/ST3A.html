@@ -28,9 +28,10 @@
 
     <!-- data set 1 form-->
     <form action='/page3A.html' method = 'post' class = 'container'>
-        <div class='form-group'>
-            <label for='datasets_drop1'>Select the Dataset:</label>
-            <select id='datasets_drop1' name='datasets_drop1' onchange="data(event)">
+        <div class='form-group container'>
+            <h2>Select the Dataset:</h2>
+            <div class="break"></div>
+            <select id='datasets_drop' name='datasets_drop' onchange="data(event)">
                 <!-- This is where the movies types are populated -->
                 <option>School Completion</option>
                 <option>Non-School Completion</option>
@@ -40,56 +41,41 @@
 
         <div class="break"></div>
 
-        <label for='genderstatus1'>select the first group for comparison</label>
-        <div id= 'genderstatus1'>
-            <label for='genderstatus1'>select the first group for comparison</label>
+        <div class= "genderstatus" id= 'genderstatus1'>
+            <h3>select the first group for comparison:</h3>
             <div class='form-group'>
-                <label for='gender_drop1'>Select Sex</label><br>
+                <label for='gender_drop1'>Select Sex:</label>
                 <select id='gender_drop1' name='gender_drop1'>
-                    <!-- This is where the movies types are populated -->
                     <option th:each="gender : ${gender_drop1}" th:text="${gender}" ></option>
                 </select>
             <br>
                 <label for='indigenous_drop1'>Select Indigenous Status</label>
                 <select id='indigenous_drop1' name='indigenous_drop1'>
-                    <!-- This is where the movies types are populated -->
                     <option th:each="status : ${indigenous_drop1}" th:text="${status}" ></option>
                 </select>
             </div>
         </div>
-        <div id= 'genderstatus2'>
-            <label for='genderstatus2'>select the second group for comparison</label>
+        <div class= "genderstatus" id= 'genderstatus2'>
+            <h3>select the second group for comparison:</h3>
             <div class='form-group'>
-                <label for='gender_drop2'>Select Sex</label><br>
+                <label for='gender_drop2'>Select Sex:</label>
                 <select id='gender_drop2' name='gender_drop2'>
-                    <!-- This is where the movies types are populated -->
                     <option th:each="gender : ${gender_drop2}" th:text="${gender}" ></option>
                 </select>
             <br>
-                <label for='indigenous_drop2'>Select Indigenous Status</label>
+                <label for='indigenous_drop2'>Select Indigenous Status:</label>
                 <select id='indigenous_drop2' name='indigenous_drop2'>
-                    <!-- This is where the movies types are populated -->
                     <option th:each="status : ${indigenous_drop2}" th:text="${status}" ></option>
                 </select>
             </div>
         </div>
 
         <div class="break"></div>
-
-        <div id=dataset1>
+    
+        <div class= "dataset" id=dataset1>
             <div class='form-group'>
-                <label for='minSchool_drop1'>select the lowest level of school completion:</label>
-                <select id = "minSchool_drop1" name = "minSchool_drop1">
-                    <option value = "0">did not go to school</option>
-                    <option value = "1">year 8</option>
-                    <option value = "2">year 9</option>
-                    <option value = "3">year 10</option>
-                    <option value = "4">year 11</option>
-                    <option value = "5">year 12+</option>
-                </select>
-                <br>
-                <label for="maxSchool_drop1">select the highest level of school completion:</label>
-                <select id = "maxSchool_drop1" name = "maxSchool_drop1">
+                <h3>select the lowest level of school completion:</h3>
+                <select id = "minSchool_drop" name = "minSchool_drop">
                     <option value = "0">did not go to school</option>
                     <option value = "1">year 8</option>
                     <option value = "2">year 9</option>
@@ -98,13 +84,23 @@
                     <option value = "5">year 12+</option>
                 </select>
 
+                <br>
+
+                <h3 >select the highest level of school completion:</h3>
+                <select id = "maxSchool_drop" name = "maxSchool_drop">
+                    <option value = "0">did not go to school</option>
+                    <option value = "1">year 8</option>
+                    <option value = "2">year 9</option>
+                    <option value = "3">year 10</option>
+                    <option value = "4">year 11</option>
+                    <option value = "5">year 12+</option>
+                </select>
             </div>
-            <button type='submit' class='btn btn-primary'>Submit</button>
         </div>
     
-        <div id=dataset2>
+        <div class= "dataset" id=dataset2>
             <div class='form-group'>
-                <p>select some levels of post-graduate degrees:</p>
+                <h3>select some levels of post-graduate degrees:</h3>
                 <input type = "checkbox" id = "degree11" value="pd_gd_gc">
                 <label for="degree11">Postgraduate Degree, Graduate Diploma, and Graduate Certificate Level</label><br>
                 <input type = "checkbox" id = "degree21" value="bd">
@@ -116,22 +112,26 @@
                 <input type = "checkbox" id = "degree51" value="ct_iii_iv">
                 <label for="degree51">certificate iii & iv level</label><br>
             </div>
-            <button type='submit' class='btn btn-primary'>Submit</button>
+        </div>
+    
+        <div class= "dataset" id=dataset3>
+            <div class='form-group'>
+                <h3>select the minimum age:</h3>
+                <input id = "min" name="min" type="number" min= "0" max = "200">
+                <h3 for="max1">select the maximum age:</h3>
+                <input id = "max" name="max" type="number" min= "0" max = "200">
+            </div>
         </div>
 
-        <div id=dataset3>
-            <div class='form-group'>
-                <label for="min1">select a minimum age:</label>
-                <input id = "min1" type="number" min= "0" max = "200">
-                <label for="max1">select a maximum age:</label>
-                <input id = "max1" type="number" min= "0" max = "200">
-            </div>
-            <button type='submit' class='btn btn-primary'>Submit</button>
-        </div>
+        <div class="break"></div> 
+        <button type='submit' class='btn btn-primary'>Submit</button>
     </form>
 
-    <div id = "Error">
-        nothing for now lol
+    <div th:if="${diffs16 != null}">
+        <h3>diffs 16</h3>
+        <ul id='diffs16' name='diffs16'>
+            <li th:each="diff : ${diffs16}" th:text="${diff}" ></li>
+            </ul>
     </div>
    </div>
 

@@ -434,14 +434,14 @@ public class JDBCConnection {
             "ON (d1.lga_code = d2.lga_code\r\n" + //
             "AND d1." + dataJoin + " = d2." + dataJoin +"\r\n" + //
             "AND d1.lga_year = d2.lga_year)\r\n" + //
-            "WHERE p1.lga_year = 2016\r\n" + //
+            "WHERE d1.lga_year = 2016\r\n" + //
             sexCond1 +" \r\n" + //
             sexCond2 +" \r\n" + //
             statCond1 +" \r\n" + //
             statCond2 +" \r\n" + //
             conditions +"\r\n" + //
             "GROUP BY d1.lga_code;";
-            
+            System.out.println("executing" + query);
             ResultSet results = statement.executeQuery(query);
             while (results.next()) {
                 String name  = results.getString("name");
@@ -470,6 +470,11 @@ public class JDBCConnection {
 
 //level 3 a methods
     public String getDataset(String datasetRaw, String gender, String status) {
+        System.out.println("rawdataset:" + datasetRaw);
+        System.out.println("rawgender:" + gender);
+        System.out.println("rawstatus" + status);
+
+        
         String dataset = "error";
 
         if (gender.equals("Both")) {
@@ -530,16 +535,16 @@ public class JDBCConnection {
             //either either
             switch(datasetRaw) {
                     case "School Completion":
-                        dataset = "SchoolCompletion";
+                        dataset = "Sch_name";
                         break;
                     case "Non-School Completion":
-                        dataset = "NonSchoolCompletion";
+                        dataset = "NSch_name";
                         break;
                     case "Population":
-                        dataset = "Population";
+                        dataset = "Pops_name";
                         break;
                     case "Long Term Health Conditions":
-                        dataset = "LTHCs";
+                        dataset = "LTHCs_name";
                         break;
                 }
         }
@@ -561,7 +566,7 @@ public class JDBCConnection {
         if (status.equals("Both")) {
         }
         else {
-            conditions = "AND " + datasetOrder +"indigenous_status ='" + status + "'";
+            conditions = "AND " + datasetOrder +".indigenous_status ='" + status + "'";
         }
         return conditions;
     }
