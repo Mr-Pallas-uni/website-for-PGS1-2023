@@ -277,10 +277,10 @@ public class PageST3A implements Handler {
             
             }
 
-            diffs16 = jdbc.getDiff(dataset, gender1, gender2, status1, status2, conditions, 2016);
-            diffs21 = jdbc.getDiff(dataset, gender1, gender2, status1, status2, conditions, 2021);
+            diffs16 = jdbc.getDiffChange(dataset, gender1, gender2, status1, status2, conditions);
+            //diffs21 = jdbc.getDiff(dataset, gender1, gender2, status1, status2, conditions, 2021);
             model.put("diffs16", diffs16);
-            model.put("diffs21", diffs16);
+            //model.put("diffs21", diffs16);
 
         }
 
