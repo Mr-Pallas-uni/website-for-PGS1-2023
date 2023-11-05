@@ -468,6 +468,99 @@ public class JDBCConnection {
         return LGADiffs;
     }
 
+    public ArrayList<String> getDiffChange(String dataset, String gender1, String gender2, String status1, String status2, String conditions) {
+
+        ArrayList<String> LGADiffs = new ArrayList<>();
+        String dataset1 = getDataset(dataset, gender1, status1);
+        String dataset2 = getDataset(dataset, gender2, status2);
+        String dataJoin = "";
+        switch(dataset) {
+                    case "School Completion":
+                        dataJoin = "SchoolCompletion";
+                        break;
+                    case "Non-School Completion":
+                        dataJoin = "nonSchoolBracket";
+                        break;
+                    case "Population":
+                        dataJoin = "age_min";
+                        break;
+                    case "Long Term Health Conditions":
+                        dataJoin = "Condition";
+                        break;
+                }
+                
+        String sexCond1 = getSexCond(gender1, "d1");
+        String statCond1 = getStatCond(status1, "d1");
+
+        String sexCond2 = getSexCond(gender2, "d2");
+        String statCond2 = getStatCond(status2, "d2");
+
+        
+        
+
+        Connection connection = null;
+
+        try {
+            connection = DriverManager.getConnection(JDBCConnection.DATABASE);
+
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+
+            String query = 
+            "SELECT d1.name, d1.lga_code, SUM(d1.count) - SUM(d2.count) AS gap16, SUM(d3.count) - SUM(d4.count) AS gap21, SUM(d1.count) - SUM(d2.count) - (SUM(d3.count) - SUM(d4.count)) AS gapChange\r\n" + //
+                    "FROM "+ dataset1 +" d1 JOIN " + dataset2 + " d2\r\n" + //
+                    "ON (d1.lga_code = d2.lga_code\r\n" + //
+                    "AND d1." + dataJoin + " = d2." + dataJoin +"\r\n" + //
+                    "AND d1.lga_year = d2.lga_year)\r\n" + //
+                    "\r\n" + //
+                    "JOIN " + dataset1 + " d3 \r\n" + //
+                    "ON (d3.lga_code = d1.lga_code\r\n" + //
+                    "AND d1." + dataJoin + " = d3." + dataJoin +"\r\n" + //
+                    "AND d1.sex = d3.sex\r\n" + //
+                    "AND d1.indigenous_status = d3.indigenous_status)\r\n" + //
+                    "\r\n" + //
+                    "JOIN "+ dataset2 + " d4\r\n" + //
+                    "ON (d2.lga_code = d4.lga_code\r\n" + //
+                    "AND d2." + dataJoin + " = d4." + dataJoin +"\r\n" + //
+                    "AND d2.sex = d4.sex\r\n" + //
+                    "AND d2.indigenous_status = d4.indigenous_status)\r\n" + //
+                    "\r\n" + //
+                    "WHERE d1.lga_year = 2016\r\n" + //
+                    "AND d3.lga_year = 2021\r\n" + //
+                    "AND d4.lga_year = 2021\r\n" + //
+                    sexCond1 +" \r\n" + //
+                    sexCond2 +" \r\n" + //
+                    statCond1 +" \r\n" + //
+                    statCond2 +" \r\n" + //
+                    conditions +"\r\n" + //
+                    "GROUP BY d1.lga_code;";
+            System.out.println("executing" + query);
+            ResultSet results = statement.executeQuery(query);
+            while (results.next()) {
+                String name  = results.getString("name");
+                int d1_count = results.getInt("gap16");
+                int d2_count = results.getInt("gap21");
+                int gap = results.getInt("gapChange");
+
+                String diff = name +":"+ d1_count +":"+ d2_count +":"+ gap;
+                LGADiffs.add(diff);
+            }
+
+            statement.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+        return LGADiffs;
+    }
+
 //level 3 a methods
     public String getDataset(String datasetRaw, String gender, String status) {
         System.out.println("rawdataset:" + datasetRaw);
