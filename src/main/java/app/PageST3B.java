@@ -38,7 +38,7 @@ public class PageST3B implements Handler {
 
         //Pass data to template
         model.put("title", new String("Finding similar LGAs"));
-        
+
         ArrayList<String> conditions = jdbc.getHealthCondition();
         model.put("health_conditions", conditions);
 
@@ -52,21 +52,36 @@ public class PageST3B implements Handler {
 
         ArrayList<String> completionlevels = jdbc.getSchoolCompletion();
         model.put("Completion_level", completionlevels);
+
+        ArrayList<LGA> lgas = jdbc.getLGAs();
+        model.put("lgas", lgas);
+        
+        //Handle lga input
+        int lga_code = 0;
+        if (context.formParam("lga-field-drop") != null) {
+            lga_code = Integer.parseInt(context.formParam("lga-field-drop"));
+        }
+
+        //Handle lga input
+        int limit = 5;
+        if (context.formParam("limit") != null) {
+            limit = Integer.parseInt(context.formParam("limit"));
+        }
+
         //Handle status input
         String indig_status = "indig";
         String indig_status_selected = context.formParam("indig-status-drop");
-        if (indig_status_selected != null && indig_status_selected != "") {
+        if (indig_status_selected != null) {
             indig_status = indig_status_selected;
         }
-        model.put("test-text", indig_status);
+
         //Handle Census year input
-        String census_year = "2021";
-        String census_year_selected = context.formParam("census-year-drop");
-        if (census_year_selected != null && census_year_selected != "") {
-        } else {
-            census_year = census_year_selected;
+        int census_year_selected = 2016;
+        if (context.formParam("census-year-drop") != null) {
+            census_year_selected = Integer.parseInt(context.formParam("census-year-drop"));
         }
 
+        
         //Handle population
         int min_age_selected = 0;
         if (context.formParam("min-age") != null){
@@ -78,16 +93,19 @@ public class PageST3B implements Handler {
         }
 
         //Handle School completion
-        int min_school_completion_selected = 0;
-        if (context.formParam("min-age") != null){
-            min_school_completion_selected = Integer.parseInt(context.formParam("min-school"));
+        String level = "did_not_go_to_school";
+        if(context.formParam("school-completion-drop") != null) {
+            level = context.formParam("school-completion-drop");
         }
-        int max_school_completion_selected = 0;
-        if (context.formParam("min-age") != null){
-            max_school_completion_selected = Integer.parseInt(context.formParam("min-school"));
-        }
-        
 
+        ArrayList<ST3BData> data = new ArrayList<ST3BData>();
+        if (context.formParam("school-completion-drop") == null) {
+            data = new ArrayList<ST3BData>();
+        } else {
+            data = jdbc.getLGAonSC(lga_code, indig_status, census_year_selected, level, limit);
+        }
+        model.put("sc_data", data);
+        
         // DO NOT MODIFY THIS
         // Makes Javalin render the webpage using Thymeleaf
         context.render(TEMPLATE, model);
