@@ -9,38 +9,9 @@
    <link rel='stylesheet' type='text/css' href='common.css' />
    <link rel='stylesheet' type='text/css' href='ST3A.css' />
 
-   <script>
-        function showFields(generalfield, selectedfield, submitBtn) {  // handles dataset specific fields
-            defaultfield.classList.remove("hidden");
-            selectedfield.classList.remove("hidden");
-            submitBtn.classList.remove("hidden");
-        }
-        function hideAllFields() {
-            document.getElementById("indig-status-field").classList.add("hidden");
-            document.getElementById("Population-field").classList.add("hidden");
-            document.getElementById("school-completion-field").classList.add("hidden");
-            document.getElementById("non-school-completion-field").classList.add("hidden");
-            document.getElementById("Health-condition-field").classList.add("hidden");
-        }
-
-        document.getElementById("select-dataset-field").addEventListener("change", function () {
-            let selectedOption = this.value;
-            selectedOption = document.getElementById(selectedOption);
-            let generalField = document.getElementById("indig-status-field");
-            let submitBtn = document.getElementById("3BformSubmit");
-
-            // Hide all option-specific fields first
-            //hideAllFields();
-
-            // Show the fields based on the selected option
-            showFields(generalField, selectedOption, submitBtn);
-            
-        });
-   </script>
-
 </head>
 
-<body>
+<body onload="data()">
    <div class='topnav'>
       <a href='/'>Homepage</a>
       <a href='mission.html'>Our Mission</a>
@@ -55,12 +26,15 @@
   </div>
 
   <div class='content'>
-
+    <div id="reminder-message-HC" class="reminder-message">
+        <span>This data is only available for 2021 census</span>
+    </div>
     <form id="3Bform" action="/page3B.html" method="post">
 
         <div class="form-group">
             <label for="select-dataset-field">Select a dataset to get started :</label>
-            <select name="select-dataset-field" id="select-dataset-field">
+            <select name="select-dataset-field" id="select-dataset-field" onchange="data(event)">
+                <option value="">Select a dataset</option>
                 <option value="school-completion-field">School Completion</option>
                 <option value="non-school-completion-field">Non-School Completion</option>
                 <option value="Population-field">Population</option>
@@ -68,31 +42,62 @@
             </select>
         </div>
 
-        <div id="indig-status-field" class="form-group hidden">
-            <h4>indig status</h4>
+        <div id="indig-status-field" class="form-group">
+            <label for='indig-status-drop'>Select Indigenous Status</label>
+            <select id='indig-status-drop' name='indig-status-drop'>
+                <option value="indig">Indigenous</option>
+                <option value="non-indig">non-Indigenous</option>
+                <option value="both">both</option>
+            </select>
         </div>
 
-        <div id="Population-field" class="form-group hidden">
-            <h4>pop field</h4>
+        <div id="census-year-field" class="form-group">
+            <label for='census-year-drop'>Select Census Year</label>
+            <select id='census-year-drop' name='census-year-drop'>
+                <option value="2016">2016 census</option>
+                <option value="2021">2021 census</option>
+            </select>
         </div>
 
-        <div id="school-completion-field" class="form-group hidden">
-            <h4>school completion field</h4>
+        <div id="Population-field" class="form-group">
+            <label for="min-age">select a minimum age:</label>
+            <input id = "min-age" type="number" min= "0" max = "200" value="0">
+            <label for="max-age">select a maximum age:</label>
+            <input id = "max-age" type="number" min= "0" max = "200" value="200">
         </div>
 
-        <div id="non-school-completion-field" class="form-group hidden">
-            <h4>non school completion field</h4>
+        <div id="school-completion-field" class="form-group">
+            <label for="min-school">select a minimum School Completion:</label>
+            <input id = "min-school" type="number" min= "0" max = "12" value="0">
+            <label for="max-school">select a maximum School Completion:</label>
+            <input id = "max-school" type="number" min= "0" max = "12" value="12">
         </div>
 
-        <div id="Health-condition-field" class="form-group hidden">
-            <h4>health fields</h4>
+        <div id="non-school-completion-field" class="form-group">
+            <label for="non-school-completion-drop">Select non-school completion category</label>
+            <select name="non-school-completion-drop" id="non-school-completion-drop">
+                <option th:each="category : ${completion_categories}" th:text="${category}" th:value="${category}"></option>
+            </select>
+        </div>
+
+        <div id="Health-condition-field" class="form-group">
+            <label for="Health-condition-drop">Select Long-term Health condition</label>
+            <select name="Health-condition-drop" id="Health-condition-drop">
+                <option th:each="condition : ${health_conditions}" th:text="${condition}" th:value="${condition}"></option>
+            </select>
+            
+            <!-- <div th:each="condition : ${health_conditions}">
+                <input th:id="${condition}" type="checkbox" th:text="${condition}" th:value="${condition}">
+            </div> -->
         </div>
         
-        <input id="3BformSubmit" type="submit" value="submit" class="submit-btn hidden">
+        <input id="3BformSubmit" type="submit" value="submit" class="submit-btn">
     </form>
 
-    <div id = "Error message">
-        nothing for now
+    <div id="data-view">
+        <div id="table-view">
+            
+        </div>
     </div>
 
    </div>
@@ -101,6 +106,104 @@
       <p>COSC2803 - studio project</p>
    </div>
 
-   <script type="text/javascript" src="ST3B.js"></script> 
+   <script>
+            //hide all fields at the start
+            let reminderMessage = document.getElementById("reminder-message-HC");
+            let StatusField = document.getElementById("indig-status-field");
+            let censusYear = document.getElementById("census-year-field");
+            let SCField = document.getElementById("school-completion-field");
+            let NSCField = document.getElementById("non-school-completion-field");
+            let populationField = document.getElementById("Population-field");
+            let HCField = document.getElementById("Health-condition-field");
+            let submitBtn = document.getElementById("3BformSubmit");
+            
+            reminderMessage.style.display = "none"; //This is used in Longterm healthcondition field
+            StatusField.style.display = "none";
+            censusYear.style.display = "none";
+            SCField.style.display = "none";
+            NSCField.style.display = "none";
+            populationField.style.display = "none";
+            HCField.style.display = "none";
+            submitBtn.style.display = "none";
+
+        //based on option show fields
+        function data(event) {
+            if (event.target.value === "school-completion-field") {
+                showSCField();
+            }
+            else if (event.target.value === "non-school-completion-field") {
+                showNSCField();
+            }
+            else if (event.target.value === "Population-field") {
+                showPopulationField();
+            }
+            else if (event.target.value === "Health-condition-field") {
+                showHCField();
+            } else {
+                hideAllFields();
+            }
+        }
+        function hideAllFields() {
+
+            reminderMessage.style.display = "none";
+            StatusField.style.display = "none";
+            censusYear.style.display = "none";
+            SCField.style.display = "none";
+            NSCField.style.display = "none";
+            populationField.style.display = "none";
+            HCField.style.display = "none";
+            submitBtn.style.display = "none";
+        }
+
+        function showSCField() {
+
+            reminderMessage.style.display = "none";
+            StatusField.style.display = "block";
+            censusYear.style.display = "block";
+            SCField.style.display = "block";
+            NSCField.style.display = "none";
+            populationField.style.display = "none";
+            HCField.style.display = "none";
+            submitBtn.style.display = "block";
+        }
+
+        function showNSCField() {
+
+            reminderMessage.style.display = "none";
+            StatusField.style.display = "block";
+            censusYear.style.display = "block";
+            SCField.style.display = "none";
+            NSCField.style.display = "block";
+            populationField.style.display = "none";
+            HCField.style.display = "none";
+            submitBtn.style.display = "block";
+        }
+
+        function showPopulationField() {
+
+            reminderMessage.style.display = "none";
+            StatusField.style.display = "block";
+            censusYear.style.display = "block";
+            SCField.style.display = "none";
+            NSCField.style.display = "none";
+            populationField.style.display = "block";
+            HCField.style.display = "none";
+            submitBtn.style.display = "block";
+        }
+
+        function showHCField() {
+
+            reminderMessage.style.display = "block";
+            StatusField.style.display = "block";
+            censusYear.style.display = "none";
+            SCField.style.display = "none";
+            NSCField.style.display = "none";
+            populationField.style.display = "none";
+            HCField.style.display = "block";
+            submitBtn.style.display = "block";
+        }
+
+
+    </script>
 </body>
 </html>
