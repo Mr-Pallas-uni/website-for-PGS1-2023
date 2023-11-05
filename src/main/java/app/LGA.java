@@ -16,8 +16,6 @@ public class LGA {
    // LGA Year
    private int year;
 
-   private int population;
-
    /**
     * Create an LGA and set the fields
     */

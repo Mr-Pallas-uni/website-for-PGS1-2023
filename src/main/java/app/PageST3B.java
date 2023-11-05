@@ -50,6 +50,8 @@ public class PageST3B implements Handler {
         categories.add("certificate iii & iv level");
         model.put("completion_categories", categories);
 
+        ArrayList<String> completionlevels = jdbc.getSchoolCompletion();
+        model.put("Completion_level", completionlevels);
         //Handle status input
         String indig_status = "indig";
         String indig_status_selected = context.formParam("indig-status-drop");
@@ -84,6 +86,7 @@ public class PageST3B implements Handler {
         if (context.formParam("min-age") != null){
             max_school_completion_selected = Integer.parseInt(context.formParam("min-school"));
         }
+        
 
         // DO NOT MODIFY THIS
         // Makes Javalin render the webpage using Thymeleaf

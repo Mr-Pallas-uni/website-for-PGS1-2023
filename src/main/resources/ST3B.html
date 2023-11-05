@@ -67,10 +67,10 @@
         </div>
 
         <div id="school-completion-field" class="form-group">
-            <label for="min-school">select a minimum School Completion:</label>
-            <input id = "min-school" type="number" min= "0" max = "12" value="0">
-            <label for="max-school">select a maximum School Completion:</label>
-            <input id = "max-school" type="number" min= "0" max = "12" value="12">
+            <label for="school-completion-drop">Select a school completion level</label>
+            <select name="school-completion-drop" id="school-completion-drop">
+                <option th:each="level : ${Completion_level}" th:text="${level}" th:value="${level}"></option>
+            </select>
         </div>
 
         <div id="non-school-completion-field" class="form-group">
@@ -96,7 +96,21 @@
 
     <div id="data-view">
         <div id="table-view">
-            
+            <!-- <div id="school-completion-view" th:if="${#lists.size(sc-data) > 0}">
+
+            </div> -->
+
+            <!-- <div id="non-school-completion-view" th:if="${#lists.size(nsc-data) > 0}">
+
+            </div>
+
+            <div id="population-view" th:if="${#lists.size(pop-data) > 0}">
+
+            </div>
+
+            <div id="health-condition-view" th:if="${#lists.size(hc-data) > 0}">
+
+            </div> -->
         </div>
     </div>
 
