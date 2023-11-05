@@ -45,9 +45,9 @@
         <div id="indig-status-field" class="form-group">
             <label for='indig-status-drop'>Select Indigenous Status</label>
             <select id='indig-status-drop' name='indig-status-drop'>
-                <option value="indig">Indigenous</option>
-                <option value="non_indig">non-Indigenous</option>
-                <option value="both">both</option>
+                <option value="'indig'">Indigenous</option>
+                <option value="'non_indig'">non-Indigenous</option>
+                <option value="'indig' OR indigenous_status = 'non_indig'">both</option>
             </select>
         </div>
 
@@ -67,10 +67,29 @@
         </div>
 
         <div id="school-completion-field" class="form-group">
-            <label for="school-completion-drop">Select a school completion level</label>
-            <select name="school-completion-drop" id="school-completion-drop">
-                <option th:each="level : ${Completion_level}" th:text="${level}" th:value="${level}"></option>
-            </select>
+            <div class='form-group'>
+                <label for="minSchool_drop">select the lowest level of school completion:</label>
+                <select id = "minSchool_drop" name = "minSchool_drop">
+                    <option value = "0">did not go to school</option>
+                    <option value = "1">year 8</option>
+                    <option value = "2">year 9</option>
+                    <option value = "3">year 10</option>
+                    <option value = "4">year 11</option>
+                    <option value = "5">year 12+</option>
+                </select>
+
+                <br>
+
+                <label for="minSchool_drop">select the highest level of school completion:</label>
+                <select id = "maxSchool_drop" name = "maxSchool_drop">
+                    <option value = "0">did not go to school</option>
+                    <option value = "1">year 8</option>
+                    <option value = "2">year 9</option>
+                    <option value = "3">year 10</option>
+                    <option value = "4">year 11</option>
+                    <option value = "5">year 12+</option>
+                </select>
+            </div>
         </div>
 
         <div id="non-school-completion-field" class="form-group">
@@ -110,20 +129,17 @@
     <div id="data-view">
         <div id="table-view">
             <div id="school-completion-view" th:if="${#lists.size(sc_data) > 0}">
+                <h6 th:text="${filters}"></h6>
                 <table>
                     <thead>
                         <tr>
                             <th> LGA name/code </th>
-                            <th> dataset </th>
-                            <th> census year </th>
                             <th> no. people </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="data : ${sc_data}">
                             <td><span th:text="${data.getLgaCode() + ' - ' + data.getLgaName()}"> LGA name/code </span></td>
-                            <td><span th:text="${data.getDataType()}"> dataset </span></td>
-                            <td><span th:text="${data.getLgaYear()}"> census year </span></td>
                             <td><span th:text="${data.getData()}"> no. people </span></td>
                         </tr>
                     </tbody>
@@ -131,11 +147,25 @@
             </div>
             </div>
 
-            <!-- <div id="non-school-completion-view" th:if="${#lists.size(nsc-data) > 0}">
+            <!-- <div id="non-school-completion-view" th:if="${#lists.size(data_nsc) > 0}">
+                <h6 th:text="${filters_nsc}"></h6>
+                <table>
+                    <thead>
+                        <tr>
+                            <th> LGA name/code </th>
+                            <th> no. people </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="data : ${data_nsc}">
+                            <td><span th:text="${data.getLgaCode() + ' - ' + data.getLgaName()}"> LGA name/code </span></td>
+                            <td><span th:text="${data.getData()}"> no. people </span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div> -->
 
-            </div>
-
-            <div id="population-view" th:if="${#lists.size(pop-data) > 0}">
+            <!-- <div id="population-view" th:if="${#lists.size(pop-data) > 0}">
 
             </div>
 
