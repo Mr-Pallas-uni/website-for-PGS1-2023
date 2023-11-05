@@ -7,12 +7,6 @@ import java.util.Map;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 /**
  * Example Index HTML class using Javalin
  * <p>
@@ -32,16 +26,10 @@ public class PageST3A implements Handler {
     @Override
     public void handle(Context context) throws Exception {
 
-        //for quick and easy mapping.
-        String schoolCategory[] = {
-            "did_not_go_to_school",
-            "y8_below",
-            "y9_equivalent",
-            "y10_equivalent",
-            "y11_equivalent",
-            "y12_equivalent"
-         };
-
+        ArrayList<String> diffs16 = new ArrayList<>();
+        ArrayList<String> diffs21 = new ArrayList<>();
+        String dataset = "Population";
+        String conditions = "";
         
         JDBCConnection jdbc = new JDBCConnection();
 
@@ -118,7 +106,7 @@ public class PageST3A implements Handler {
         }
 
         String status2 = "indig";
-        String status_drop2 = context.formParam("indigenous_drop1");
+        String status_drop2 = context.formParam("indigenous_drop2");
         if (status_drop2 == null || status_drop2 == "") {
         } else {
             switch(status_drop2) {
@@ -134,9 +122,8 @@ public class PageST3A implements Handler {
 
             }
         }
-        ArrayList<String> diffs16 = new ArrayList<>();
-        String dataset = "Population";
-        String conditions = "";
+
+        
         String datasets_drop = context.formParam("datasets_drop");
         if (datasets_drop == null || datasets_drop == "") {
             System.out.print("no dataset");
@@ -146,8 +133,8 @@ public class PageST3A implements Handler {
             switch(datasets_drop) {
                 case "School Completion":
                     dataset = datasets_drop;
-                    int schoolMin;
-                    int schoolMax;
+                    int schoolMin = 0;
+                    int schoolMax = 0;
 
                     temp = context.formParam("minSchool_drop");
                     System.out.println("temp:" + temp);
@@ -168,13 +155,89 @@ public class PageST3A implements Handler {
                         System.out.println(schoolMax);
 
                     }
-
+                    conditions = jdbc.getSchoolCompletion(schoolMin, schoolMax);
                     //select statement missing as it will be added in the "getDiff method"
                     System.out.print(dataset);
                     break;
 
                 case "Non-School Completion":
                     dataset = datasets_drop;
+                    boolean first = true;
+                    conditions += "AND (";
+                    temp = context.formParam("degree1");
+                    System.out.println("temp:" + temp);
+                    if (temp == null || temp == ""){
+                        System.out.println("no degree1");
+                    }
+                    else {
+                        if (first) {
+                            conditions += "d1.nonSchoolBracket ='" + temp + "'";
+                            first = false;
+                        }
+                        else {
+                         conditions += " OR d1.nonSchoolBracket ='" + temp +"'";   
+                        }
+                    }
+
+                    temp = context.formParam("degree2");
+                    if (temp == null || temp == ""){
+                        System.out.println("no degree2");
+                    }
+                    else {
+                        if (first) {
+                            conditions += "d1.nonSchoolBracket ='" + temp + "'";
+                            first = false;
+                        }
+                        else {
+                         conditions += " OR d1.nonSchoolBracket ='" + temp +"'";   
+                        }
+
+                    }
+
+                    temp = context.formParam("degree3");
+                    System.out.println("temp:" + temp);
+                    if (temp == null || temp == ""){
+                        System.out.println("no degree3");
+                    }
+                    else {
+                        if (first) {
+                            conditions += "d1.nonSchoolBracket ='" + temp + "'";
+                            first = false;
+                        }
+                        else {
+                         conditions += " OR d1.nonSchoolBracket ='" + temp +"'";   
+                        }
+                    }
+
+                    temp = context.formParam("degree4");
+                    if (temp == null || temp == ""){
+                        System.out.println("no degree4");
+                    }
+                    else {
+                        if (first) {
+                            conditions += "d1.nonSchoolBracket ='" + temp + "'";
+                            first = false;
+                        }
+                        else {
+                         conditions += " OR d1.nonSchoolBracket ='" + temp +"'";   
+                        }
+
+                    }
+                    temp = context.formParam("degree5");
+                    if (temp == null || temp == ""){
+                        System.out.println("no degree5");
+                    }
+                    else {
+                        if (first) {
+                            conditions += "d1.nonSchoolBracket ='" + temp + "'";
+                            first = false;
+                        }
+                        else {
+                         conditions += " OR d1.nonSchoolBracket ='" + temp +"'";   
+                        }
+
+                    }
+                    conditions += ")";
                                                     System.out.print(dataset);
 
                     break;
@@ -214,8 +277,11 @@ public class PageST3A implements Handler {
             
             }
 
-            diffs16 = jdbc.getDiff(dataset, gender1, gender2, status1, status2, conditions);
+            diffs16 = jdbc.getDiff(dataset, gender1, gender2, status1, status2, conditions, 2016);
+            diffs21 = jdbc.getDiff(dataset, gender1, gender2, status1, status2, conditions, 2021);
             model.put("diffs16", diffs16);
+            model.put("diffs21", diffs16);
+
         }
 
         // DO NOT MODIFY THIS

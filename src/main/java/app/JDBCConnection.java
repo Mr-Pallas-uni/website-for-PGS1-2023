@@ -390,7 +390,7 @@ public class JDBCConnection {
         return personas;
     }
 
-    public ArrayList<String> getDiff(String dataset, String gender1, String gender2, String status1, String status2, String conditions) {
+    public ArrayList<String> getDiff(String dataset, String gender1, String gender2, String status1, String status2, String conditions, int year) {
 
         ArrayList<String> LGADiffs = new ArrayList<>();
         String dataset1 = getDataset(dataset, gender1, status1);
@@ -434,7 +434,7 @@ public class JDBCConnection {
             "ON (d1.lga_code = d2.lga_code\r\n" + //
             "AND d1." + dataJoin + " = d2." + dataJoin +"\r\n" + //
             "AND d1.lga_year = d2.lga_year)\r\n" + //
-            "WHERE d1.lga_year = 2016\r\n" + //
+            "WHERE d1.lga_year = "+ year +"\r\n" + //
             sexCond1 +" \r\n" + //
             sexCond2 +" \r\n" + //
             statCond1 +" \r\n" + //
@@ -472,7 +472,7 @@ public class JDBCConnection {
     public String getDataset(String datasetRaw, String gender, String status) {
         System.out.println("rawdataset:" + datasetRaw);
         System.out.println("rawgender:" + gender);
-        System.out.println("rawstatus" + status);
+        System.out.println("rawstatus:" + status);
 
         
         String dataset = "error";
@@ -570,6 +570,32 @@ public class JDBCConnection {
         }
         return conditions;
     }
+    
+    public String getSchoolCompletion( int min, int max) {
+        //for quick and easy mapping.
+        String schoolCategory[] = {
+            "did_not_go_to_school",
+            "y8_below",
+            "y9_equivalent",
+            "y10_equivalent",
+            "y11_equivalent",
+            "y12_equivalent"
+         };
+
+         String conditions = "AND (";
+         for (int i = min; i < max + 1; i++) {
+            if (i == min) {
+                conditions += "d1.SchoolCompletion = '" + schoolCategory[i] + "' ";
+            }
+            else {
+                conditions += "OR d1.SchoolCompletion = '" + schoolCategory[i] + "' ";
+            }
+            
+         }
+         conditions += ")";
+        return conditions;
+    }
+    
     //
 
 // level 3b methods

@@ -101,16 +101,16 @@
         <div class= "dataset" id=dataset2>
             <div class='form-group'>
                 <h3>select some levels of post-graduate degrees:</h3>
-                <input type = "checkbox" id = "degree11" value="pd_gd_gc">
-                <label for="degree11">Postgraduate Degree, Graduate Diploma, and Graduate Certificate Level</label><br>
-                <input type = "checkbox" id = "degree21" value="bd">
-                <label for="degree21">Bachelors degree level</label><br>
-                <input type = "checkbox" id = "degree31" value="adip_dip">
-                <label for="degree31">Advanced diploma and diploma level</label><br>
-                <input type = "checkbox" id = "degree41" value="ct_i_ii">
-                <label for="degree41">certificate i & ii level</label><br>
-                <input type = "checkbox" id = "degree51" value="ct_iii_iv">
-                <label for="degree51">certificate iii & iv level</label><br>
+                <input type = "checkbox" id = "degree1" name="degree1" value="pd_gd_gc">
+                <label for="degree1">Postgraduate Degree, Graduate Diploma, and Graduate Certificate Level</label><br>
+                <input type = "checkbox" id = "degree2" name="degree2" value="bd">
+                <label for="degree2">Bachelors degree level</label><br>
+                <input type = "checkbox" id = "degree3" name="degree3" value="adip_dip">
+                <label for="degree3">Advanced diploma and diploma level</label><br>
+                <input type = "checkbox" id = "degree4" name="degree4" value="ct_i_ii">
+                <label for="degree4">certificate i & ii level</label><br>
+                <input type = "checkbox" id = "degree5" name="degree5" value="ct_iii_iv">
+                <label for="degree5">certificate iii & iv level</label><br>
             </div>
         </div>
     
@@ -133,6 +133,21 @@
             <li th:each="diff : ${diffs16}" th:text="${diff}" ></li>
             </ul>
     </div>
+
+    <div th:if="${diffs21 != null}">
+        <h3>diffs 16</h3>
+        <ul id='diffs21' name='diffs21'>
+            <li th:each="diff : ${diffs21}" th:text="${diff}" ></li>
+            </ul>
+    </div>
+
+    <div th:if="${diffsGap != null}">
+        <h3>diffs 16</h3>
+        <ul id='diffsGap' name='diffsGap'>
+            <li th:each="diff : ${diffsGap}" th:text="${diff}" ></li>
+            </ul>
+    </div>
+
    </div>
 
    <div class='footer'>
