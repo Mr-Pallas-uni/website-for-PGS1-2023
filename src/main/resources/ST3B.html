@@ -46,7 +46,7 @@
             <label for='indig-status-drop'>Select Indigenous Status</label>
             <select id='indig-status-drop' name='indig-status-drop'>
                 <option value="indig">Indigenous</option>
-                <option value="non-indig">non-Indigenous</option>
+                <option value="non_indig">non-Indigenous</option>
                 <option value="both">both</option>
             </select>
         </div>
@@ -90,15 +90,46 @@
                 <input th:id="${condition}" type="checkbox" th:text="${condition}" th:value="${condition}">
             </div> -->
         </div>
+
+        <div id="lga-field" class="form-group">
+            <label for="lga-field-drop">Select an LGA to find other similar LGAs</label>
+            <select name="lga-field-drop" id="lga-field-drop">
+                <option th:each="lga : ${lgas}" th:text="${lga.getCode() + '-' + lga.getName()}" th:value="${lga.getCode()}">
+                </option>
+            </select>
+        </div>
+
+        <div id="limit" class="form-group">
+            <label for="limit">Set how many similar LGAs to be retrieved</label>
+            <input name = "limit" id = "limit" type="number" min= "0" max = "999" value="5">
+        </div>
         
         <input id="3BformSubmit" type="submit" value="submit" class="submit-btn">
     </form>
 
     <div id="data-view">
         <div id="table-view">
-            <!-- <div id="school-completion-view" th:if="${#lists.size(sc-data) > 0}">
-
-            </div> -->
+            <div id="school-completion-view" th:if="${#lists.size(sc_data) > 0}">
+                <table>
+                    <thead>
+                        <tr>
+                            <th> LGA name/code </th>
+                            <th> dataset </th>
+                            <th> census year </th>
+                            <th> no. people </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="data : ${sc_data}">
+                            <td><span th:text="${data.getLgaCode() + ' - ' + data.getLgaName()}"> LGA name/code </span></td>
+                            <td><span th:text="${data.getDataType()}"> dataset </span></td>
+                            <td><span th:text="${data.getLgaYear()}"> census year </span></td>
+                            <td><span th:text="${data.getData()}"> no. people </span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            </div>
 
             <!-- <div id="non-school-completion-view" th:if="${#lists.size(nsc-data) > 0}">
 
@@ -123,8 +154,8 @@
    <script>
             //hide all fields at the start
             let reminderMessage = document.getElementById("reminder-message-HC");
-            let StatusField = document.getElementById("indig-status-field");
-            let censusYear = document.getElementById("census-year-field");
+            let lgaField = document.getElementById("lga-field");
+            let limitField = document.getElementById("limit");
             let SCField = document.getElementById("school-completion-field");
             let NSCField = document.getElementById("non-school-completion-field");
             let populationField = document.getElementById("Population-field");
@@ -132,8 +163,8 @@
             let submitBtn = document.getElementById("3BformSubmit");
             
             reminderMessage.style.display = "none"; //This is used in Longterm healthcondition field
-            StatusField.style.display = "none";
-            censusYear.style.display = "none";
+            lgaField.style.display = "none";
+            limitField.style.display = "none";
             SCField.style.display = "none";
             NSCField.style.display = "none";
             populationField.style.display = "none";
@@ -160,8 +191,8 @@
         function hideAllFields() {
 
             reminderMessage.style.display = "none";
-            StatusField.style.display = "none";
-            censusYear.style.display = "none";
+            lgaField.style.display = "none";
+            limitField.style.display = "none";
             SCField.style.display = "none";
             NSCField.style.display = "none";
             populationField.style.display = "none";
@@ -172,8 +203,8 @@
         function showSCField() {
 
             reminderMessage.style.display = "none";
-            StatusField.style.display = "block";
-            censusYear.style.display = "block";
+            lgaField.style.display = "block";
+            limitField.style.display = "block";
             SCField.style.display = "block";
             NSCField.style.display = "none";
             populationField.style.display = "none";
@@ -184,8 +215,8 @@
         function showNSCField() {
 
             reminderMessage.style.display = "none";
-            StatusField.style.display = "block";
-            censusYear.style.display = "block";
+            lgaField.style.display = "block";
+            limitField.style.display = "block";
             SCField.style.display = "none";
             NSCField.style.display = "block";
             populationField.style.display = "none";
@@ -196,8 +227,8 @@
         function showPopulationField() {
 
             reminderMessage.style.display = "none";
-            StatusField.style.display = "block";
-            censusYear.style.display = "block";
+            lgaField.style.display = "block";
+            limitField.style.display = "block";
             SCField.style.display = "none";
             NSCField.style.display = "none";
             populationField.style.display = "block";
@@ -208,16 +239,14 @@
         function showHCField() {
 
             reminderMessage.style.display = "block";
-            StatusField.style.display = "block";
-            censusYear.style.display = "none";
+            lgaField.style.display = "block";
+            limitField.style.display = "none";
             SCField.style.display = "none";
             NSCField.style.display = "none";
             populationField.style.display = "none";
             HCField.style.display = "block";
             submitBtn.style.display = "block";
         }
-
-
     </script>
 </body>
 </html>

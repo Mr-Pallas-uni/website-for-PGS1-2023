@@ -20,6 +20,10 @@ public class ST3BData {
       return lga.getCode();
    }
 
+   public int getLgaYear( ) {
+      return lga.getYear();
+   }
+
    public String getDataType() {
       return type;
    }
