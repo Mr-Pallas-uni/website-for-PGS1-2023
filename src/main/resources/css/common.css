@@ -147,9 +147,8 @@ padding: .25em;
 #datasets_drop{
   text-align: center;
   margin:auto;
-  display: inline-block
+  display: inline-block;
  }
- .form-group{
-  align-items: center;
-  display: flex;
+ .form-group, input, select {
+  font-size:larger
  }
