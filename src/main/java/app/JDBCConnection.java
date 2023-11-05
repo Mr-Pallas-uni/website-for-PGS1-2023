@@ -389,48 +389,214 @@ public class JDBCConnection {
         // Finally we return all of the lga
         return personas;
     }
-    public ArrayList<LGADiff> getDiff(String dataset, String conditions) {
 
-        ArrayList<LGADiff> LGADiffs = new ArrayList<LGADiff>();
+    public ArrayList<String> getDiff(String dataset, String gender1, String gender2, String status1, String status2, String conditions, int year) {
 
-        // Connection connection = null;
+        ArrayList<String> LGADiffs = new ArrayList<>();
+        String dataset1 = getDataset(dataset, gender1, status1);
+        String dataset2 = getDataset(dataset, gender2, status2);
+        String dataJoin = "";
+        switch(dataset) {
+                    case "School Completion":
+                        dataJoin = "SchoolCompletion";
+                        break;
+                    case "Non-School Completion":
+                        dataJoin = "nonSchoolBracket";
+                        break;
+                    case "Population":
+                        dataJoin = "age_min";
+                        break;
+                    case "Long Term Health Conditions":
+                        dataJoin = "Condition";
+                        break;
+                }
+                
+        String sexCond1 = getSexCond(gender1, "d1");
+        String statCond1 = getStatCond(status1, "d1");
 
-        // try {
-        //     connection = DriverManager.getConnection(JDBCConnection.DATABASE);
+        String sexCond2 = getSexCond(gender2, "d2");
+        String statCond2 = getStatCond(status2, "d2");
 
-        //     Statement statement = connection.createStatement();
-        //     statement.setQueryTimeout(30);
+        
+        
 
-        //     String query = "SELECT lgas1621.name, sum(c16) AS d16, sum(c21) d21, 100 * sum(totalDiff)/ sum(c16) AS perChange1621 FROM "
-        //      + dataset + " NATURAL JOIN lgas1621" + conditions ;
-            
-        //     ResultSet results = statement.executeQuery(query);
+        Connection connection = null;
 
-        //     while (results.next()) {
-        //         String name  = results.getString("name");
-        //         int d16 = results.getInt("d16");
-        //         int d21 = results.getInt("d21");
+        try {
+            connection = DriverManager.getConnection(JDBCConnection.DATABASE);
 
-        //     }
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
 
-        //     statement.close();
-        // } catch (SQLException e) {
-        //     System.err.println(e.getMessage());
-        // } finally {
-        //     try {
-        //         if (connection != null) {
-        //             connection.close();
-        //         }
-        //     } catch (SQLException e) {
-        //         System.err.println(e.getMessage());
-        //     }
-        // }
+            String query = 
+            "SELECT d1.name, d1.lga_code, SUM(d1.count) d1_count, SUM(d2.count) d2_count, SUM(d1.count) - SUM(d2.count) AS gap\r\n" + //
+            "FROM " + dataset1 +" d1 JOIN " + dataset2 + " d2\r\n" + //
+            "ON (d1.lga_code = d2.lga_code\r\n" + //
+            "AND d1." + dataJoin + " = d2." + dataJoin +"\r\n" + //
+            "AND d1.lga_year = d2.lga_year)\r\n" + //
+            "WHERE d1.lga_year = "+ year +"\r\n" + //
+            sexCond1 +" \r\n" + //
+            sexCond2 +" \r\n" + //
+            statCond1 +" \r\n" + //
+            statCond2 +" \r\n" + //
+            conditions +"\r\n" + //
+            "GROUP BY d1.lga_code;";
+            System.out.println("executing" + query);
+            ResultSet results = statement.executeQuery(query);
+            while (results.next()) {
+                String name  = results.getString("name");
+                int d1_count = results.getInt("d1_count");
+                int d2_count = results.getInt("d2_count");
+                int gap = results.getInt("gap");
+
+                String diff = name +":"+ d1_count +":"+ d2_count +":"+ gap;
+                LGADiffs.add(diff);
+            }
+
+            statement.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        }
         return LGADiffs;
     }
 
 //level 3 a methods
-//
-//
+    public String getDataset(String datasetRaw, String gender, String status) {
+        System.out.println("rawdataset:" + datasetRaw);
+        System.out.println("rawgender:" + gender);
+        System.out.println("rawstatus:" + status);
+
+        
+        String dataset = "error";
+
+        if (gender.equals("Both")) {
+            if (status.equals("Both")) {
+                //both both
+                switch(datasetRaw) {
+                    case "School Completion":
+                        dataset = "Sch_Both_Both";
+                        break;
+                    case "Non-School Completion":
+                        dataset = "NSch_Both_Both";
+                        break;
+                    case "Population":
+                        dataset = "pops_Both_Both";
+                        break;
+                    case "Long Term Health Conditions":
+                        dataset = "LTHCs_Both_Both";
+                        break;
+                }
+            }
+            else {
+                //both either
+                switch(datasetRaw) {
+                    case "School Completion":
+                        dataset = "Sch_S_Both";
+                        break;
+                    case "Non-School Completion":
+                        dataset = "NSch_S_Both";
+                        break;
+                    case "Population":
+                        dataset = "pops_S_Both";
+                        break;
+                    case "Long Term Health Conditions":
+                        dataset = "LTHCs_S_Both";
+                        break;
+                }
+            }
+        }
+        else if (status.equals("Both")) {
+            // either both
+
+            switch(datasetRaw) {
+                    case "School Completion":
+                        dataset = "Sch_I_Both";
+                        break;
+                    case "Non-School Completion":
+                        dataset = "NSch_I_Both";
+                        break;
+                    case "Population":
+                        dataset = "pops_I_Both";
+                        break;
+                    case "Long Term Health Conditions":
+                        dataset = "LTHCs_I_Both";
+                        break;
+                }
+        }
+        else {
+            //either either
+            switch(datasetRaw) {
+                    case "School Completion":
+                        dataset = "Sch_name";
+                        break;
+                    case "Non-School Completion":
+                        dataset = "NSch_name";
+                        break;
+                    case "Population":
+                        dataset = "Pops_name";
+                        break;
+                    case "Long Term Health Conditions":
+                        dataset = "LTHCs_name";
+                        break;
+                }
+        }
+        return dataset;
+    }
+
+    public String getSexCond(String gender, String datasetOrder) {
+        String conditions = "";
+        if (gender.equals("Both")) {
+        }
+        else {
+            conditions = "AND " + datasetOrder +".sex ='" + gender + "'";
+        }
+        return conditions;
+    }
+
+    public String getStatCond(String status, String datasetOrder) {
+        String conditions = "";
+        if (status.equals("Both")) {
+        }
+        else {
+            conditions = "AND " + datasetOrder +".indigenous_status ='" + status + "'";
+        }
+        return conditions;
+    }
+    
+    public String getSchoolCompletion( int min, int max) {
+        //for quick and easy mapping.
+        String schoolCategory[] = {
+            "did_not_go_to_school",
+            "y8_below",
+            "y9_equivalent",
+            "y10_equivalent",
+            "y11_equivalent",
+            "y12_equivalent"
+         };
+
+         String conditions = "AND (";
+         for (int i = min; i < max + 1; i++) {
+            if (i == min) {
+                conditions += "d1.SchoolCompletion = '" + schoolCategory[i] + "' ";
+            }
+            else {
+                conditions += "OR d1.SchoolCompletion = '" + schoolCategory[i] + "' ";
+            }
+            
+         }
+         conditions += ")";
+        return conditions;
+    }
+    
+    //
 
 // level 3b methods
 
