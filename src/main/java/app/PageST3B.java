@@ -83,62 +83,106 @@ public class PageST3B implements Handler {
             census_year_selected = Integer.parseInt(context.formParam("census-year-drop"));
         }
 
+        String dataset = "";
+        if (context.formParam("dataset") != null) {
+            dataset = context.formParam("dataset");
+        }
+
         
-
-
-        //Handle population
-        int min_age_selected = 0;
-        if (context.formParam("min-age") != null){
-            min_age_selected = Integer.parseInt(context.formParam("min-age"));
-        }
-        int max_age_selected = 0;
-        if (context.formParam("min-age") != null){
-            max_age_selected = Integer.parseInt(context.formParam("min-age"));
-        }
-
-        //Handle School completion
-        int lowest_level = 0;
-        int highest_level = 5;
-        String condition = "";
-        if(context.formParam("maxSchool_drop") != null && context.formParam("minSchool_drop") != null) {
-            highest_level = Integer.parseInt(context.formParam("maxSchool_drop"));
-            lowest_level = Integer.parseInt(context.formParam("minSchool_drop"));
-            condition = jdbc.getSchoolCompletion3B(lowest_level, highest_level);
-        }
-
-        ArrayList<ST3BData> data = new ArrayList<ST3BData>();
-        String filters = "Data displayed based on filters : ";
-        if (context.formParam("maxSchool_drop") == null) {
-            data = new ArrayList<ST3BData>();
-            filters = "No data Found on those filters";
-        } else {
-            data = jdbc.getLGAonSC(lga_code, indig_status, indig_status_condition, census_year_selected, condition, limit);
-            filters += "Status: " + indig_status +", "+ 
-                       "Census year: " + census_year_selected +", "+ 
-                       "LGA : " + data.get(0).getLgaName() +", "+ 
-                       "data on Top " + limit + " most similar LGA in terms of School Completion" ;
-        }
-        model.put("sc_data", data);
-        model.put("filters", filters);
-
-        //Handle non School completion
-        String category_selected = "";
-        if(context.formParam("non-school-completion-drop") != null && 
-           convertToNonSchoolCode(context.formParam("non-school-completion-drop")) != "") {
-            category_selected = convertToNonSchoolCode(context.formParam("non-school-completion-drop"));
-        }
+        //data variables
+        ArrayList<ST3BData> data_sc = new ArrayList<ST3BData>();
+        String filters_sc = "Data displayed based on filters : ";
 
         ArrayList<ST3BData> data_nsc = new ArrayList<ST3BData>();
         String filters_nsc = "Data displayed based on filters : ";
-        if (category_selected != "" && category_selected != null) {
-            data_nsc = jdbc.getLGAonNSC(lga_code, indig_status, indig_status_condition, census_year_selected, category_selected, limit);
-            filters_nsc += "Status: " + indig_status +", "+ 
-                       "Census year: " + census_year_selected +", "+ 
-                       "LGA : " + data_nsc.get(0).getLgaName() +", "+ 
-                       "data on Top " + limit + " most similar LGA" ;
+
+        ArrayList<ST3BData> data_pop = new ArrayList<ST3BData>();
+        String filters_pop = "Data displayed based on filters : ";
+
+        ArrayList<ST3BData> data_hc = new ArrayList<ST3BData>();
+        String filters_hc = "Data displayed based on filters : ";
+
+        //Processing form inputs and displaying data
+        switch (dataset) {
+            case "population" :
+                // population
+                int min_age_selected = 0;
+                if (context.formParam("min-age") != null){
+                    min_age_selected = Integer.parseInt(context.formParam("min-age"));
+                }
+                int max_age_selected = 0;
+                if (context.formParam("max-age") != null){
+                    max_age_selected = Integer.parseInt(context.formParam("max-age"));
+                }
+                
+                if (context.formParam("min-age") != null && context.formParam("max-age") != null) {
+                    data_pop = jdbc.getLGAonPop(lga_code, indig_status, min_age_selected, max_age_selected,
+                                                census_year_selected, limit);
+                    filters_pop =   "Status: " + indig_status +", "+ 
+                                    "Census year: " + census_year_selected +", "+ 
+                                    "LGA : " + jdbc.getLGAbyCode(lga_code).getName() +", "+ 
+                                    "data on Top " + limit + " most similar LGA in terms of " + data_pop.get(0).getDataType();
+                }
+                break;
+
+            case "school-completion" :
+                // School completion
+                int lowest_level = 0;
+                int highest_level = 5;
+                String condition = "";
+                if(context.formParam("maxSchool_drop") != null && context.formParam("minSchool_drop") != null) {
+                    highest_level = Integer.parseInt(context.formParam("maxSchool_drop"));
+                    lowest_level = Integer.parseInt(context.formParam("minSchool_drop"));
+                    condition = jdbc.getSchoolCompletion3B(lowest_level, highest_level);
+                }
+
+                if (context.formParam("maxSchool_drop") == null) {
+                    data_sc = new ArrayList<ST3BData>();
+                    filters_sc = "No data Found on those filters";
+                } else {
+                    data_sc = jdbc.getLGAonSC(lga_code, indig_status, indig_status_condition, census_year_selected, condition, limit);
+                    filters_sc += "Status: " + indig_status +", "+ 
+                            "Census year: " + census_year_selected +", "+ 
+                            "LGA : " + jdbc.getLGAbyCode(lga_code).getName() +", "+ 
+                            "data on Top " + limit + " most similar LGA in terms of School Completion" ;
+                }
+                break;
+
+             case "non-school-completion" :
+                // non School completion
+                String category_selected = "";
+                if(context.formParam("non-school-completion-drop") != null && 
+                convertToNonSchoolCode(context.formParam("non-school-completion-drop")) != "") {
+                    category_selected = convertToNonSchoolCode(context.formParam("non-school-completion-drop"));
+                }
+
+                if (category_selected != "" && category_selected != null) {
+                    data_nsc = jdbc.getLGAonNSC(lga_code, indig_status, indig_status_condition, census_year_selected, category_selected, limit);
+                    filters_nsc += "Status: " + indig_status +", "+ 
+                            "Census year: " + census_year_selected +", "+ 
+                            "LGA : " + jdbc.getLGAbyCode(lga_code).getName() +", "+ 
+                            "data on Top " + limit + " most similar LGA" ;
+                }
+                break;
+
+            case "health-condition" :
+                break;
         }
+
+        //feed data to template
+        model.put("data_sc", data_sc);
+        model.put("filters_sc", filters_sc);
+
         model.put("data_nsc", data_nsc);
         model.put("filters_nsc", filters_nsc);
+
+        model.put("data_pop", data_pop);
+        model.put("filters_pop", filters_pop);
+
+        model.put("data_hc", data_hc);
+        model.put("filters_hc", filters_hc);
+        
+
         
         // DO NOT MODIFY THIS
         // Makes Javalin render the webpage using Thymeleaf

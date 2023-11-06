@@ -967,6 +967,61 @@ public class JDBCConnection {
         return lgas;
     }
 
+    public LGA getLGAbyCode(int code) {
+        // Create the ArrayList of LGA objects to return
+        LGA lga = new LGA(code, "none", 0000);
+
+        // Setup the variable for the JDBC connection
+        Connection connection = null;
+
+        try {
+            // Connect to JDBC data base
+            connection = DriverManager.getConnection(DATABASE);
+
+            // Prepare a new SQL Query & Set a timeout
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+
+            // The Query
+            String query = "SELECT lga_code, lga_year, name FROM LGAs\r\n" + //
+                           "WHERE lga_code = " + code + ";";
+            
+            // Get Result
+            ResultSet results = statement.executeQuery(query);
+
+            // Process all of the results
+            while (results.next()) {
+                // Lookup the columns we need
+                int lga_code     = results.getInt("lga_code");
+                String name  = results.getString("name");
+                int year = results.getInt("lga_year");
+
+                // Create a LGA Object
+                lga = new LGA(lga_code, name, year);
+
+            }
+
+            // Close the statement because we are done with it
+            statement.close();
+        } catch (SQLException e) {
+            // If there is an error, lets just pring the error
+            System.err.println(e.getMessage());
+        } finally {
+            // Safety code to cleanup
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                // connection close failed.
+                System.err.println(e.getMessage());
+            }
+        }
+
+        // Finally we return all of the lga
+        return lga;
+    }
+
     public ArrayList<ST3BData> getLGAonSC(int code, String status, String status_condition, int year, String condition, int limit) {
         ArrayList<ST3BData> similarLGAs = new ArrayList<ST3BData>();
 
@@ -1074,8 +1129,91 @@ public class JDBCConnection {
                 int lga_code = results.getInt("lga_code");
                 int lga_year = results.getInt("lga_year");
                 String lga_name = results.getString("name");
-                String type = results.getString("SchoolCompletion");
+                String type = results.getString("nonschoolBracket");
                 int count = results.getInt("count");
+                
+                LGA newLGA = new LGA(lga_code, lga_name, lga_year);
+                ST3BData similarLga = new ST3BData(newLGA, type, status, count);
+                // Add the lga object to the array
+                similarLGAs.add(similarLga);
+                System.out.println(similarLGAs.size());
+            }
+
+            // Close the statement because we are done with it
+            statement.close();
+        } catch (SQLException e) {
+            // If there is an error, lets just pring the error
+            System.err.println(e.getMessage());
+        } finally {
+            // Safety code to cleanup
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                // connection close failed.
+                System.err.println(e.getMessage());
+            }
+        }
+
+        // Finally we return all of the lga
+        return similarLGAs;
+    }
+
+    public ArrayList<ST3BData> getLGAonPop(int code, String status, int minAge, int maxAge, int year, int limit) {
+        ArrayList<ST3BData> similarLGAs = new ArrayList<ST3BData>();
+
+        // Setup the variable for the JDBC connection
+        Connection connection = null;
+        String Status_condition = "";
+        switch (status) {
+            case "'indig'":
+                Status_condition = " = 'indig'";
+                break;
+            case "'non_indig'":
+            Status_condition = " = 'non_indig'";
+                break;
+            case "'indig' OR indigenous_status = 'non_indig'" :
+            Status_condition = " != 'indig_stat_not_stated'";
+        }
+
+        try {
+            // Connect to JDBC data base
+            connection = DriverManager.getConnection(JDBCConnection.DATABASE);
+
+            // Prepare a new SQL Query & Set a timeout
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+
+            // The Query
+            String query =  "SELECT name, lga_code, lga_year, SUM(count)\r\n" + //
+                            "FROM Pops_S_Both\r\n" + //
+                            "WHERE (indigenous_status " + Status_condition +" \r\n" + //
+                            "    AND lga_year = " + year + "\r\n" + //
+                            "    AND age_min >= " + minAge + "\r\n" + //
+                            "    AND age_max <= " + maxAge + ")\r\n" + //
+                            "GROUP BY lga_code, name, lga_year\r\n" + //
+                            "ORDER BY ABS(SUM(count) - (SELECT SUM(count)\r\n" + //
+                            "                     FROM Pops_S_Both\r\n" + //
+                            "                     WHERE (lga_code = " + code + "\r\n" + //
+                            "                        AND indigenous_status " + Status_condition + " \r\n" + //
+                            "                        AND lga_year = " + year + "\r\n" + //
+                            "                        AND age_min >= " + minAge + "\r\n" + //
+                            "                        AND age_max <= " + maxAge + ")\r\n" + //
+                            "                     GROUP BY lga_code, name, lga_year))\r\n" + //
+                            "LIMIT " + limit +";";
+            
+            // Get Result
+            System.out.println(query);
+            ResultSet results = statement.executeQuery(query);
+
+            // Process all of the results
+            while (results.next()) {
+                int lga_code = results.getInt("lga_code");
+                int lga_year = results.getInt("lga_year");
+                String lga_name = results.getString("name");
+                String type = "population of people between " + minAge + " and " + maxAge;
+                int count = results.getInt("SUM(count)");
                 
                 LGA newLGA = new LGA(lga_code, lga_name, lga_year);
                 ST3BData similarLga = new ST3BData(newLGA, type, status, count);
