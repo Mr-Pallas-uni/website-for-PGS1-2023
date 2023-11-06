@@ -6,6 +6,7 @@
    <title>Homepage</title>
    
    <link rel='stylesheet' type='text/css' href='common.css'>
+   <link rel='stylesheet' type='text/css' href='ST3A.css'>
    <link rel='stylesheet' type='text/css' href='ST3A.html'>
 
 </head>
@@ -32,10 +33,10 @@
             <h2>Select the Dataset:</h2>
             <div class="break"></div>
             <select id='datasets_drop' name='datasets_drop' onchange="data(event)">
-                <!-- This is where the movies types are populated -->
                 <option>School Completion</option>
                 <option>Non-School Completion</option>
                 <option>Population</option>
+                <option value="Long-Term Health Conditions">Long-Term Health Conditions (2021 data ONLY)</option>
             </select>
         </div>
 
@@ -123,35 +124,122 @@
             </div>
         </div>
 
+        <div class= "dataset" id='dataset4'>
+            <div class='form-group'>
+                <h3>select some long-term health conditions:</h3>
+                <input type="checkbox" th:each="condition : ${health_conditions}" th:name="${condition}" th:text="${condition}" th:value="${condition}"></input>
+            </div>
+        </div>
+
         <div class="break"></div> 
         <button type='submit' class='btn btn-primary'>Submit</button>
     </form>
-
-    <div th:if="${diffs16 != null}">
-        <h3>diffs 16</h3>
-        <ul id='diffs16' name='diffs16'>
-            <li th:each="diff : ${diffs16}" th:text="${diff}" ></li>
-            </ul>
-    </div>
-
-    <div th:if="${diffs21 != null}">
-        <h3>diffs 16</h3>
-        <ul id='diffs21' name='diffs21'>
-            <li th:each="diff : ${diffs21}" th:text="${diff}" ></li>
-            </ul>
-    </div>
-
-    <div th:if="${diffsGap != null}">
-        <h3>diffs 16</h3>
-        <ul id='diffsGap' name='diffsGap'>
-            <li th:each="diff : ${diffsGap}" th:text="${diff}" ></li>
-            </ul>
-    </div>
-
+        
+        <div class="tab">
+          <button class="tablinks" onclick="openCity(event, '16')" id="defaultOpen">2016 gap</button>
+          <button class="tablinks" onclick="openCity(event, '21')">2021 gap</button>
+          <button class="tablinks" onclick="openCity(event, 'change')">gap change</button>
+        </div>
+        
+        <div id="16" class="tabcontent">
+          <div th:if="${diffs16 != null}">
+            <h3 th:text= "${userSelected}"></h3>
+            <h2> 2016 data</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th> LGA name</th>
+                        <th>group 1 count </th>
+                        <th> group 2 count </th>
+                        <th> gap (%)</th>
+    
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="diff : ${diffs16}">
+                        <td><span th:text="${diff.getName()}"> LGA name </span></td>
+                        <td><span th:text="${diff.getCount1()}"> group 1 count </span></td>
+                        <td><span th:text="${diff.getCount2()}"> group 2 count </span></td>
+                        <td><span th:text="${diff.getDifference}"> gap (%) </span></td>
+                    </tr>
+                </tbody>
+            </table>
+          </div>    
+        </div>
+        
+        <div id="21" class="tabcontent">
+            <div th:if="${diffs21 != null}">
+                <h3 th:text= "${userSelected}"></h3>
+                <h2> 2021 data</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th> LGA name</th>
+                            <th>group 1 count </th>
+                            <th> group 2 count </th>
+                            <th> gap  (%)</th>
+        
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="diff : ${diffs21}">
+                            <td><span th:text="${diff.getName()}"> LGA name </span></td>
+                            <td><span th:text="${diff.getCount1()}"> group 1 count </span></td>
+                            <td><span th:text="${diff.getCount2()}"> group 2 count </span></td>
+                            <td><span th:text="${diff.getDifference}"> gap (%) </span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="change" class="tabcontent">
+            <div th:if="${diffs != null}">
+                <h3 th:text= "${userSelected}"></h3>
+                <h2> change in gap</h2>
+                <table id="timeChange">
+                    <thead>
+                        <tr>
+                            <th> LGA name</th>
+                            <th>gap in 2016 </th>
+                            <th> gap in 2021 </th>
+                            <th> change in gap (%) </th>
+        
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="diff : ${diffs}">
+                            <td><span th:text="${diff.getName()}"> LGA name </span></td>
+                            <td><span th:text="${diff.getCount1()}"> gap in 2016 </span></td>
+                            <td><span th:text="${diff.getCount2()}"> gap in 2021 </span></td>
+                            <td><span th:text="${diff.getDifference}"> change in gap (%) </span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
    </div>
 
    <div class='footer'>
     <script>
+        function openCity(evt, cityName) {
+          var i, tabcontent, tablinks;
+          tabcontent = document.getElementsByClassName("tabcontent");
+          for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+          }
+          tablinks = document.getElementsByClassName("tablinks");
+          for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+          }
+          document.getElementById(cityName).style.display = "block";
+          evt.currentTarget.className += " active";
+        }
+        
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+
         function data(event) {
             if (event.target.value === "School Completion") {
                 data1();
@@ -162,36 +250,57 @@
             else if (event.target.value === "Population") {
                 data3();
             }
-            
+            else if (event.target.value === "Long-Term Health Conditions") {
+                data4();
+            }
         }
         function data1() {
             var d1 = document.getElementById("dataset1");
             var d2 = document.getElementById("dataset2");
             var d3 = document.getElementById("dataset3");
+            var d4 = document.getElementById("dataset4");
             
-            d1.style.display = "block"
-            d2.style.display = "none"
-            d3.style.display = "none"
+            d4.style.display = "none";
+            d1.style.display = "block";
+            d2.style.display = "none";
+            d3.style.display = "none";
         }
     
         function data2() {
             var d1 = document.getElementById("dataset1");
             var d2 = document.getElementById("dataset2");
             var d3 = document.getElementById("dataset3");
-    
-            d1.style.display = "none"
-            d2.style.display = "block"
-            d3.style.display = "none"
+            var d4 = document.getElementById("dataset4");
+            
+            d4.style.display = "none";   
+            d1.style.display = "none";
+            d2.style.display = "block";
+            d3.style.display = "none";
         }
     
         function data3() {
-            var d1 = document.getElementById("dataset1")
-            var d2 = document.getElementById("dataset2")
-            var d3 = document.getElementById("dataset3")
+            var d1 = document.getElementById("dataset1");
+            var d2 = document.getElementById("dataset2");
+            var d3 = document.getElementById("dataset3");
+            var d4 = document.getElementById("dataset4");
+            
+            d4.style.display = "none";
+            d1.style.display = "none";
+            d2.style.display = "none";
+            d3.style.display = "block";
+    
+        }
 
-            d1.style.display = "none"
-            d2.style.display = "none"
-            d3.style.display = "block"
+        function data4() {
+            var d1 = document.getElementById("dataset1");
+            var d2 = document.getElementById("dataset2");
+            var d3 = document.getElementById("dataset3");
+            var d4 = document.getElementById("dataset4");
+            
+            d4.style.display = "block";
+            d1.style.display = "none";
+            d2.style.display = "none";
+            d3.style.display = "none";
     
         }
         </script> 
