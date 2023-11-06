@@ -429,7 +429,7 @@ public class JDBCConnection {
             statement.setQueryTimeout(30);
 
             String query = 
-            "SELECT d1.name, d1.lga_code, SUM(d1.count) d1_count, SUM(d2.count) d2_count, ABS((100* (1.0*SUM(d2.count) / SUM(d1.count))) - 1) AS gap\r\n" + //
+            "SELECT d1.name, SUM(d1.count) d1_count, SUM(d2.count) d2_count, ABS(100*((1.0*SUM(d2.count) / SUM(d1.count)) -1)) AS gap\r\n" + //
             "FROM " + dataset1 +" d1 JOIN " + dataset2 + " d2\r\n" + //
             "ON (d1.lga_code = d2.lga_code\r\n" + //
             "AND d1." + dataJoin + " = d2." + dataJoin +"\r\n" + //
@@ -525,7 +525,7 @@ public class JDBCConnection {
             statement.setQueryTimeout(30);
 
             String query = 
-            "SELECT d1.name, d1.lga_code, SUM(d1.count) - SUM(d2.count) AS gap16, SUM(d3.count) - SUM(d4.count) AS gap21, ROUND(\r\n" + //
+            "SELECT d1.name, SUM(d1.count) - SUM(d2.count) AS gap16, SUM(d3.count) - SUM(d4.count) AS gap21, ROUND(\r\n" + //
                     "                                                                                                            ABS(((1.0 *(SUM(d3.count) - SUM(d4.count))\r\n" + //
                     "                                                                                                                 /  \r\n" + //
                     "                                                                                                             (SUM(d1.count) - SUM(d2.count))\r\n" + //
@@ -571,7 +571,7 @@ public class JDBCConnection {
                 String name  = results.getString("name");
                 int d1_count = results.getInt("gap16");
                 int d2_count = results.getInt("gap21");
-                int gap = results.getInt("gapChange");
+                float gap = results.getFloat("gapChange");
 
                 LGADiff lga = new LGADiff(name, d1_count, d2_count, gap);
                 LGADiffs.add(lga);
@@ -719,6 +719,117 @@ public class JDBCConnection {
          conditions += ")";
         return conditions;
     }
+
+    public String getCountJoins(String sex, String status) {
+        String conditions = "";
+        if (sex.equals("Both") && status.equals("Both")) {
+
+        }
+        else if (sex.equals("Both")) {
+            conditions = "AND d1.indigenous_status = d2.indigenous_status\r\n";
+        }
+        else if (status.equals("Both")) {
+            conditions = "AND d1.sex = d2.sex\r\n";
+        }
+        else {
+            conditions = "AND d1.indigenous_status = d2.indigenous_status\r\n" + //
+                "AND d1.sex = d2.sex";
+        }
+        return conditions;
+    }
+    //level 2 methods
+
+    public String getCountGroups (String sex, String status) {
+        String conditions = "";
+        if (sex.equals("Both") && status.equals("Both")) {
+
+        }
+        else if (sex.equals("Both")) {
+            conditions = ", d1.indigenous_status";
+        }
+        else if (status.equals("Both")) {
+            conditions = ", d1.sex";
+        }
+        else {
+            conditions = ", d1.indigenous_status, d1.sex";
+        }
+        return conditions;
+    }
+    
+    public ArrayList<LGACount> getCount(String datasetraw, String gender, String status, String conditions, boolean isstate, boolean proportional, String ordercat, boolean ascending) {
+
+        ArrayList<LGACount> LGACounts = new ArrayList<>();
+        String dataset = getDataset(datasetraw, gender, status);
+              
+        String sexCond = getSexCond(gender, "d1");
+        String statCond = getStatCond(status, "d1");
+
+        Connection connection = null;
+
+        try {
+            connection = DriverManager.getConnection(JDBCConnection.DATABASE);
+
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+            
+            String query;
+            if (proportional) {
+                query = "SELECT d1.name, d1.lga_code, ROUND(100 * (1.0*SUM(d1.count) / d2.count),2) AS count\r\n" + //
+                "FROM "+ dataset +" d1 JOIN ";
+                if (isstate) {
+                    query += "state_pops_ALL d2 ON (\r\n" + //
+                    "d1.stateCode = d2.stateCode\r\n";
+                }
+                else {
+                    query += "pops_ALL d2 ON (\r\n" + //
+                    "d1.lga_code = d2.lga_code\r\n";
+                }
+                query += "AND d1.lga_year = d2.lga_year)";
+            } else {
+                query = 
+            "SELECT Name, lga_code, SUM(count)\r\n" + //
+            " AS count\r\n" + //
+            "FROM " + dataset + " d1";
+            }
+            query +=
+            " WHERE d1.lga_year = "+ 2021 +"\r\n" + //
+            sexCond +" \r\n" + //
+            statCond +" \r\n" + //
+            conditions +"\r\n" + //
+            "GROUP BY d1.lga_code, d1.lga_year" + getCountGroups(gender, status) + "\r\n" + //
+            "ORDER BY " + ordercat;
+            if (ascending) {
+                query += " ASC;";
+            }
+            else {
+                query += " DESC;";
+            }
+            System.out.println("executing" + query);
+            ResultSet results = statement.executeQuery(query);
+            while (results.next()) {
+                String name  = results.getString("Name");
+                int code = results.getInt("lga_code");
+                float count = results.getFloat("count");
+
+                LGACount lga = new LGACount(name, code, count);
+                LGACounts.add(lga);
+            }
+
+            statement.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+        return LGACounts;
+    }
+
 
     //
 

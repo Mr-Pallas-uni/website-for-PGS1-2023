@@ -15,7 +15,7 @@
    <div class='topnav'>
       <a href='/'>Homepage</a>
       <a href='mission.html'>Our Mission</a>
-      <a href='page2A.html'>Sub Task 2.A</a>
+      <a href='page2.html'>Sub Task 2</a>
       <a href='page2B.html'>Sub Task 2.B</a>
       <a href='page3A.html'>Sub Task 3.A</a>
       <a href='page3B.html'>Sub Task 3.B</a>
@@ -28,7 +28,7 @@
   <div class='content'>
 
     <!-- data set 1 form-->
-    <form action='/page3A.html' method = 'post' class = 'container'>
+    <form action='/page2.html' method = 'post' class = 'container'>
         <div class='form-group container'>
             <h2>Select the Dataset:</h2>
             <div class="break"></div>
@@ -43,7 +43,7 @@
         <div class="break"></div>
 
         <div class= "genderstatus" id= 'genderstatus1'>
-            <h3>select the first group for comparison:</h3>
+            <h3>select the group you want the data for:</h3>
             <div class='form-group'>
                 <label for='gender_drop1'>Select Sex:</label>
                 <select id='gender_drop1' name='gender_drop1'>
@@ -53,6 +53,41 @@
                 <label for='indigenous_drop1'>Select Indigenous Status</label>
                 <select id='indigenous_drop1' name='indigenous_drop1'>
                     <option th:each="status : ${indigenous_drop1}" th:text="${status}" ></option>
+                </select>
+            </div>
+        </div>
+
+        <div class= 'order'>
+            <h3>select how you want to sort the group:</h3>
+            <div class='form-group'>
+                <label for='cat'>Select a sorting category:</label>
+                <select id='cat' name='cat'>
+                    <option value = "name"> name</option>
+                    <option value = "code"> code</option>
+                    <option value = "count" selected> count</option>
+                </select>
+            <br>
+                <label for='ASCDESC'>Select how you wish to sort the data:</label>
+                <select id='ASCDESC' name='ASCDESC'>
+                    <option value = "ASC"> ascending (lowest to highest)</option>
+                    <option value = "DESC" selected> descending (highest to lowest)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class= 'stateProp'>
+            <h3>select how the data should be displayed:</h3>
+            <div class='form-group'>
+                <label for='stateLGA'>Select the granularity displayed</label>
+                <select id='stateLGA' name='stateLGA'>
+                    <option value = "state" > States</option>
+                    <option value = "lga" selected> LGAs</option>
+                </select>
+            <br>
+                <label for='Prop'>select the type of data displayed</label>
+                <select id='Prop' name='Prop'>
+                    <option value = "raw" selected> raw (exact counts)</option>
+                    <option value = "proportional" > proportional (counts relative to the total)</option>
                 </select>
             </div>
         </div>
@@ -121,83 +156,31 @@
         <button type='submit' class='btn btn-primary'>Submit</button>
     </form>
         
-        <div class="tab">
-          <button class="tablinks" onclick="openCity(event, '16')" id="defaultOpen">2016 gap</button>
-          <button class="tablinks" onclick="openCity(event, '21')">2021 gap</button>
-        </div>
-        
-        <div id="16" class="tabcontent">
-          <div th:if="${diffs16 != null}">
-            <h3 th:text= "${userSelected}"></h3>
-            <h2> 2016 data</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th> LGA name</th>
-                        <th>group 1 count </th>
-                        <th> group 2 count </th>
-                        <th> gap (%)</th>
-    
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="diff : ${diffs16}">
-                        <td><span th:text="${diff.getName()}"> LGA name </span></td>
-                        <td><span th:text="${diff.getCount1()}"> group 1 count </span></td>
-                        <td><span th:text="${diff.getCount2()}"> group 2 count </span></td>
-                        <td><span th:text="${diff.getDifference}"> gap (%) </span></td>
-                    </tr>
-                </tbody>
-            </table>
-          </div>    
-        </div>
-        
-        <div id="21" class="tabcontent">
-            <div th:if="${diffs21 != null}">
+            <div id=results21 th:if="${data21 != null}">
                 <h3 th:text= "${userSelected}"></h3>
                 <h2> 2021 data</h2>
                 <table>
                     <thead>
                         <tr>
-                            <th> LGA name</th>
-                            <th>group 1 count </th>
-                            <th> group 2 count </th>
-                            <th> gap  (%)</th>
-        
+                            <th> name</th>
+                            <th> code </th>
+                            <th> Population <span th:text="${proportional}"></span> </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="diff : ${diffs21}">
-                            <td><span th:text="${diff.getName()}"> LGA name </span></td>
-                            <td><span th:text="${diff.getCount1()}"> group 1 count </span></td>
-                            <td><span th:text="${diff.getCount2()}"> group 2 count </span></td>
-                            <td><span th:text="${diff.getDifference}"> gap (%) </span></td>
+                        <tr th:each="diff : ${data21}">
+                            <td><span th:text="${diff.getName()}"> name </span></td>
+                            <td><span th:text="${diff.getCode()}"> code </span></td>
+                            <td><span th:text="${diff.getPop()}"> population </span></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </div>
         
    </div>
 
    <div class='footer'>
     <script>
-        function openCity(evt, cityName) {
-          var i, tabcontent, tablinks;
-          tabcontent = document.getElementsByClassName("tabcontent");
-          for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-          }
-          tablinks = document.getElementsByClassName("tablinks");
-          for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-          }
-          document.getElementById(cityName).style.display = "block";
-          evt.currentTarget.className += " active";
-        }
-        
-        // Get the element with id="defaultOpen" and click on it
-        document.getElementById("defaultOpen").click();
 
         function data(event) {
             if (event.target.value === "School Completion") {

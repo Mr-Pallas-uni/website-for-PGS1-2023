@@ -15,12 +15,12 @@ public class LGADiff {;
 
    private int count2;
 
-   private int difference;
+   private float difference;
 
    /**
     * Create an LGA and set the fields
     */
-   public LGADiff(String name, int count1, int count2, int diff) {
+   public LGADiff(String name, int count1, int count2, float diff) {
       this.name = name;
       this.count1 = count1;
       this.count2 = count2;
@@ -36,7 +36,7 @@ public class LGADiff {;
    public String getName() {
        return name;
    }
-   public int getDifference() {
+   public float getDifference() {
        return difference;
    }
 
