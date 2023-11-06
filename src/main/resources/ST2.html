@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8">
+   <meta name="viewport" content="width=device-width">
+   <title>Homepage</title>
+   
+   <link rel='stylesheet' type='text/css' href='common.css'>
+   <link rel='stylesheet' type='text/css' href='ST2.css'>
+   <link rel='stylesheet' type='text/css' href='ST2.html'>
+
+</head>
+
+<body onload="data1()">
+   <div class='topnav'>
+      <a href='/'>Homepage</a>
+      <a href='mission.html'>Our Mission</a>
+      <a href='page2A.html'>Sub Task 2.A</a>
+      <a href='page2B.html'>Sub Task 2.B</a>
+      <a href='page3A.html'>Sub Task 3.A</a>
+      <a href='page3B.html'>Sub Task 3.B</a>
+   </div>
+   
+   <div class='header'>
+      <h1 th:text="${title}"></h1>
+   </div>
+
+  <div class='content'>
+
+    <!-- data set 1 form-->
+    <form action='/page3A.html' method = 'post' class = 'container'>
+        <div class='form-group container'>
+            <h2>Select the Dataset:</h2>
+            <div class="break"></div>
+            <select id='datasets_drop' name='datasets_drop' onchange="data(event)">
+                <option>School Completion</option>
+                <option>Non-School Completion</option>
+                <option>Population</option>
+                <option value="Long-Term Health Conditions">Long-Term Health Conditions (2021 data ONLY)</option>
+            </select>
+        </div>
+
+        <div class="break"></div>
+
+        <div class= "genderstatus" id= 'genderstatus1'>
+            <h3>select the first group for comparison:</h3>
+            <div class='form-group'>
+                <label for='gender_drop1'>Select Sex:</label>
+                <select id='gender_drop1' name='gender_drop1'>
+                    <option th:each="gender : ${gender_drop1}" th:text="${gender}" ></option>
+                </select>
+            <br>
+                <label for='indigenous_drop1'>Select Indigenous Status</label>
+                <select id='indigenous_drop1' name='indigenous_drop1'>
+                    <option th:each="status : ${indigenous_drop1}" th:text="${status}" ></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="break"></div>
+    
+        <div class= "dataset" id=dataset1>
+            <div class='form-group'>
+                <h3>select the lowest level of school completion:</h3>
+                <select id = "minSchool_drop" name = "minSchool_drop">
+                    <option value = "0">did not go to school</option>
+                    <option value = "1">year 8</option>
+                    <option value = "2">year 9</option>
+                    <option value = "3">year 10</option>
+                    <option value = "4">year 11</option>
+                    <option value = "5">year 12+</option>
+                </select>
+
+                <br>
+
+                <h3 >select the highest level of school completion:</h3>
+                <select id = "maxSchool_drop" name = "maxSchool_drop">
+                    <option value = "0">did not go to school</option>
+                    <option value = "1">year 8</option>
+                    <option value = "2">year 9</option>
+                    <option value = "3">year 10</option>
+                    <option value = "4">year 11</option>
+                    <option value = "5">year 12+</option>
+                </select>
+            </div>
+        </div>
+    
+        <div class= "dataset" id=dataset2>
+            <div class='form-group'>
+                <h3>select some levels of post-graduate degrees:</h3>
+                <input type = "checkbox" id = "degree1" name="degree1" value="pd_gd_gc">
+                <label for="degree1">Postgraduate Degree, Graduate Diploma, and Graduate Certificate Level</label><br>
+                <input type = "checkbox" id = "degree2" name="degree2" value="bd">
+                <label for="degree2">Bachelors degree level</label><br>
+                <input type = "checkbox" id = "degree3" name="degree3" value="adip_dip">
+                <label for="degree3">Advanced diploma and diploma level</label><br>
+                <input type = "checkbox" id = "degree4" name="degree4" value="ct_i_ii">
+                <label for="degree4">certificate i & ii level</label><br>
+                <input type = "checkbox" id = "degree5" name="degree5" value="ct_iii_iv">
+                <label for="degree5">certificate iii & iv level</label><br>
+            </div>
+        </div>
+    
+        <div class= "dataset" id=dataset3>
+            <div class='form-group'>
+                <h3>select the minimum age:</h3>
+                <input id = "min" name="min" type="number" min= "0" max = "200">
+                <h3 for="max1">select the maximum age:</h3>
+                <input id = "max" name="max" type="number" min= "0" max = "200">
+            </div>
+        </div>
+
+        <div class= "dataset" id='dataset4'>
+            <div class='form-group'>
+                <h3>select some long-term health conditions:</h3>
+                <input type="checkbox" th:each="condition : ${health_conditions}" th:name="${condition}" th:text="${condition}" th:value="${condition}"></input>
+            </div>
+        </div>
+
+        <div class="break"></div> 
+        <button type='submit' class='btn btn-primary'>Submit</button>
+    </form>
+        
+        <div class="tab">
+          <button class="tablinks" onclick="openCity(event, '16')" id="defaultOpen">2016 gap</button>
+          <button class="tablinks" onclick="openCity(event, '21')">2021 gap</button>
+        </div>
+        
+        <div id="16" class="tabcontent">
+          <div th:if="${diffs16 != null}">
+            <h3 th:text= "${userSelected}"></h3>
+            <h2> 2016 data</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th> LGA name</th>
+                        <th>group 1 count </th>
+                        <th> group 2 count </th>
+                        <th> gap (%)</th>
+    
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="diff : ${diffs16}">
+                        <td><span th:text="${diff.getName()}"> LGA name </span></td>
+                        <td><span th:text="${diff.getCount1()}"> group 1 count </span></td>
+                        <td><span th:text="${diff.getCount2()}"> group 2 count </span></td>
+                        <td><span th:text="${diff.getDifference}"> gap (%) </span></td>
+                    </tr>
+                </tbody>
+            </table>
+          </div>    
+        </div>
+        
+        <div id="21" class="tabcontent">
+            <div th:if="${diffs21 != null}">
+                <h3 th:text= "${userSelected}"></h3>
+                <h2> 2021 data</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th> LGA name</th>
+                            <th>group 1 count </th>
+                            <th> group 2 count </th>
+                            <th> gap  (%)</th>
+        
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="diff : ${diffs21}">
+                            <td><span th:text="${diff.getName()}"> LGA name </span></td>
+                            <td><span th:text="${diff.getCount1()}"> group 1 count </span></td>
+                            <td><span th:text="${diff.getCount2()}"> group 2 count </span></td>
+                            <td><span th:text="${diff.getDifference}"> gap (%) </span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+   </div>
+
+   <div class='footer'>
+    <script>
+        function openCity(evt, cityName) {
+          var i, tabcontent, tablinks;
+          tabcontent = document.getElementsByClassName("tabcontent");
+          for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+          }
+          tablinks = document.getElementsByClassName("tablinks");
+          for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+          }
+          document.getElementById(cityName).style.display = "block";
+          evt.currentTarget.className += " active";
+        }
+        
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+
+        function data(event) {
+            if (event.target.value === "School Completion") {
+                data1();
+            }
+            else if (event.target.value === "Non-School Completion") {
+                data2();
+            }
+            else if (event.target.value === "Population") {
+                data3();
+            }
+            else if (event.target.value === "Long-Term Health Conditions") {
+                data4();
+            }
+        }
+        function data1() {
+            var d1 = document.getElementById("dataset1");
+            var d2 = document.getElementById("dataset2");
+            var d3 = document.getElementById("dataset3");
+            var d4 = document.getElementById("dataset4");
+            
+            d4.style.display = "none";
+            d1.style.display = "block";
+            d2.style.display = "none";
+            d3.style.display = "none";
+        }
+    
+        function data2() {
+            var d1 = document.getElementById("dataset1");
+            var d2 = document.getElementById("dataset2");
+            var d3 = document.getElementById("dataset3");
+            var d4 = document.getElementById("dataset4");
+            
+            d4.style.display = "none";   
+            d1.style.display = "none";
+            d2.style.display = "block";
+            d3.style.display = "none";
+        }
+    
+        function data3() {
+            var d1 = document.getElementById("dataset1");
+            var d2 = document.getElementById("dataset2");
+            var d3 = document.getElementById("dataset3");
+            var d4 = document.getElementById("dataset4");
+            
+            d4.style.display = "none";
+            d1.style.display = "none";
+            d2.style.display = "none";
+            d3.style.display = "block";
+    
+        }
+
+        function data4() {
+            var d1 = document.getElementById("dataset1");
+            var d2 = document.getElementById("dataset2");
+            var d3 = document.getElementById("dataset3");
+            var d4 = document.getElementById("dataset4");
+            
+            d4.style.display = "block";
+            d1.style.display = "none";
+            d2.style.display = "none";
+            d3.style.display = "none";
+    
+        }
+        </script> 
+      <p>COSC2803 - studio project</p>
+   </div>
+
+</body>
+</html>
