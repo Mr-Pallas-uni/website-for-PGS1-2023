@@ -54,7 +54,7 @@ public class PersonaProcessor {
             Statement statement = connection.createStatement();
             String query = "INSERT into PersonaAttributes (PerName, AttributeType, Description) VALUES ("
                                     + "'" + name + "',"
-                                    + "'needs',"
+                                    + "'skills',"
                                     + "'" + skills[i] + "'"
                                     + ")";
             // Execute the INSERT
@@ -190,9 +190,9 @@ public class PersonaProcessor {
          connection = DriverManager.getConnection(DATABASE);
 
          //Inserting Personas
-         processPersona(Name1, ImagePath1, ImageCredit1, connection);
-         processPersona(Name2, ImagePath2, ImageCredit2, connection);
-         processPersona(Name3, ImagePath3, ImageCredit3, connection);
+         // processPersona(Name1, ImagePath1, ImageCredit1, connection);
+         // processPersona(Name2, ImagePath2, ImageCredit2, connection);
+         // processPersona(Name3, ImagePath3, ImageCredit3, connection);
 
          //Inserting Persona Attributes
          processAttributes(Name1, Attr1, Needs1, Goals1, Skills1, connection);

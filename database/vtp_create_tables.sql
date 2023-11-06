@@ -45,7 +45,6 @@ CREATE TABLE PersonaAttributes (
     PerName         TEXT NOT NULL,
     AttributeType   TEXT NOT NULL,
     Description     TEXT NOT NULL,
-    PRIMARY KEY (ID)
     FOREIGN KEY (PerName) REFERENCES Personas(PerName)
 );
 
