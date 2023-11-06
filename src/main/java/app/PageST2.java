@@ -25,10 +25,7 @@ public class PageST2 implements Handler {
 
     @Override
     public void handle(Context context) throws Exception {
-
-        ArrayList<LGADiff> diffs16 = new ArrayList<>();
-        ArrayList<LGADiff> diffs21 = new ArrayList<>();
-        ArrayList<LGADiff> diffs = new ArrayList<>();
+        
         String dataset = "Population";
         String conditions = "";
         
@@ -73,10 +70,10 @@ public class PageST2 implements Handler {
         }
 
         String status1 = "indig";
-        String status_drop1 = context.formParam("indigenous_drop1");
-        if (status_drop1 == null || status_drop1 == "") {
+        String status_drop = context.formParam("indigenous_drop1");
+        if (status_drop == null || status_drop == "") {
         } else {
-            switch(status_drop1) {
+            switch(status_drop) {
                 case "Indigenous":
                     status1 = "indig";
                     break;
@@ -87,6 +84,66 @@ public class PageST2 implements Handler {
                     status1 = "Both";
                     break;
 
+            }
+        }
+        String sortCategory = "count";
+        String sortCategoryRaw = context.formParam("cat");
+        if (sortCategoryRaw == null || sortCategoryRaw == "") {
+        } else {
+            switch(sortCategoryRaw) {
+                case "name":
+                    sortCategory = "d1.name";
+                    break;
+                case "code":
+                    sortCategory = "d1.lga_code";
+                    break;
+                case "count":
+                    sortCategory = "count";
+                    break;
+            }
+        }
+
+        Boolean ASC = false;
+        String ASCDESC = context.formParam("ASCDESC");
+        if (ASCDESC == null || ASCDESC == "") {
+        } else {
+            switch(ASCDESC) {
+                case "ASC":
+                    ASC = true;
+                    break;
+                case "DESC":
+                    ASC = false;;
+                    break;
+                case "count":
+                    sortCategory = "count";
+                    break;
+
+            }
+        }
+
+        Boolean isState = false;
+        String isStateraw = context.formParam("stateLGA");
+        if (isStateraw == null || isStateraw == "") {
+        } else {
+            switch(isStateraw) {
+                case "States":
+                    isState = true;
+                    break;
+                case "LGAs":
+                    isState = false;
+                    break;
+            }
+        }
+
+        Boolean isProp = false;
+        String isPropRaw = context.formParam("Prop");
+        System.out.print("prop raw: " + isPropRaw);
+        if (isPropRaw == null || isPropRaw == "") {
+            model.put("proportional", new String (""));
+        } else {
+            if (isPropRaw.equals("proportional")) {
+                isProp = true;
+                 model.put("proportional", new String (" (%)"));
             }
         }
 
@@ -267,12 +324,11 @@ public class PageST2 implements Handler {
                 break;
             
             }
-
+            ArrayList<LGACount> data21 = jdbc.getCount(dataset, gender1, status1, conditions, isState, isProp, sortCategory, ASC);
             String userSelected ="you selected: " + dataset + "," + gender1 +  ", " + status1 + ", Where " + conditions;
             model.put("userSelected", userSelected);
-            //model.put("diffs", diffs);
-            //model.put("diffs16", diffs16);
-            //model.put("diffs21", diffs21);
+            //model.put("data16", data16);
+            model.put("data21", data21);
 
         }
 

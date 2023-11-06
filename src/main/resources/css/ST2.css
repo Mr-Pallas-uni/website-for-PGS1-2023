@@ -2,9 +2,6 @@
 .dataset {
     display: none;
   }
-  #genderstatus {
-    display:none;
-  }
   
   #genderstatus select{
     display:inline-block;
@@ -32,7 +29,7 @@
   .container .dataset{
     margin: 1em;
   }
-  .container .genderstatus {
+  .container .genderstatus, .order, .stateProp{
 
     text-align: center;
     align-items: center;
@@ -96,4 +93,7 @@
     padding: 6px 12px;
     border: 1px solid #ccc;
     border-top: none;
+  }
+  table {
+    margin:auto;
   }

@@ -92,3 +92,10 @@ h2 {
 label{
   display: inline-block;
 }
+
+table {
+  margin:auto;
+}
+#results21 {
+  text-align: center;
+}
