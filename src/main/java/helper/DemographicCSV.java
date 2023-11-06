@@ -45,7 +45,7 @@ public class DemographicCSV {
       String status[] = {
          "indig",
          "non_indig",
-         "indig_ns"
+         "indig_stat_not_stated"
       };
       String sex[] = {
          "f",
