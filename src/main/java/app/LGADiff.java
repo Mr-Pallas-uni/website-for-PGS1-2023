@@ -11,20 +11,33 @@ public class LGADiff {;
    // LGA Name
    private String name;
 
-   private int diff16;
+   private int count1;
 
-   private int diff21;
+   private int count2;
 
-   private int change1621_perc;
+   private int difference;
 
    /**
     * Create an LGA and set the fields
     */
-   public LGADiff(String name, int diff16, int diff21, int change1621_perc) {
+   public LGADiff(String name, int count1, int count2, int diff) {
       this.name = name;
-      this.change1621_perc = change1621_perc;
-      this.diff16 = diff16;
-      this.diff21 = diff21;
+      this.count1 = count1;
+      this.count2 = count2;
+      this.difference = diff;
+   }
+
+   public int getCount1() {
+       return count1;
+   }
+   public int getCount2() {
+       return count2;
+   }
+   public String getName() {
+       return name;
+   }
+   public int getDifference() {
+       return difference;
    }
 
 }

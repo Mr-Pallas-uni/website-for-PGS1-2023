@@ -26,8 +26,9 @@ public class PageST3A implements Handler {
     @Override
     public void handle(Context context) throws Exception {
 
-        ArrayList<String> diffs16 = new ArrayList<>();
-        ArrayList<String> diffs21 = new ArrayList<>();
+        ArrayList<LGADiff> diffs16 = new ArrayList<>();
+        ArrayList<LGADiff> diffs21 = new ArrayList<>();
+        ArrayList<LGADiff> diffs = new ArrayList<>();
         String dataset = "Population";
         String conditions = "";
         
@@ -52,6 +53,9 @@ public class PageST3A implements Handler {
 
         model.put("indigenous_drop1", inds);
         model.put("indigenous_drop2", inds);
+
+        ArrayList<String> healthConds = jdbc.getHealthCondition();
+        model.put("health_conditions", healthConds);
 
         String gender1 = "m";
         String gender_drop = context.formParam("gender_drop1");
@@ -123,13 +127,13 @@ public class PageST3A implements Handler {
             }
         }
 
-        
         String datasets_drop = context.formParam("datasets_drop");
         if (datasets_drop == null || datasets_drop == "") {
             System.out.print("no dataset");
 
         } else {
-            String temp;
+            String temp = "";
+            boolean first = true;
             switch(datasets_drop) {
                 case "School Completion":
                     dataset = datasets_drop;
@@ -162,7 +166,7 @@ public class PageST3A implements Handler {
 
                 case "Non-School Completion":
                     dataset = datasets_drop;
-                    boolean first = true;
+                    first = true;
                     conditions += "AND (";
                     temp = context.formParam("degree1");
                     System.out.println("temp:" + temp);
@@ -274,13 +278,42 @@ public class PageST3A implements Handler {
                                                     System.out.print(dataset);
 
                     break;
+                case "Long-Term Health Conditions":
+                    dataset = datasets_drop;
+                    first = true;
+                    conditions += "AND (";
+                    for (int i = 0; i < healthConds.size(); i++) {
+                    temp = context.formParam(healthConds.get(i));
+                        if (temp == null || temp == ""){
+                            System.out.println("no " + healthConds.get(i));
+                        }
+                        else {
+                            if (first) {
+                                conditions += "d1.condition ='" + temp + "'";
+                                first = false;
+                            }
+                            else {
+                                conditions += " OR d1.condition ='" + temp +"'";   
+                            }
+                        }
+                    }
+                    
+                    conditions += ")";
+                                                System.out.print(dataset);
+
+                break;
             
             }
 
-            diffs16 = jdbc.getDiffChange(dataset, gender1, gender2, status1, status2, conditions);
-            //diffs21 = jdbc.getDiff(dataset, gender1, gender2, status1, status2, conditions, 2021);
-            model.put("diffs16", diffs16);
-            //model.put("diffs21", diffs16);
+            //diffs = jdbc.getDiffChange(dataset, gender1, gender2, status1, status2, conditions);
+            //diffs16 = jdbc.getDiff(dataset, gender1, gender2, status1, status2, conditions, 2016);
+            diffs21 = jdbc.getDiff(dataset, gender1, gender2, status1, status2, conditions, 2021);
+
+            String userSelected ="you selected: " + dataset + ", Group 1: (" + gender1 +  ", " + status1 + "), Group 2: (" + gender2 + ", " + status2 + "), Where " + conditions;
+            model.put("userSelected", userSelected);
+            //model.put("diffs", diffs);
+            //model.put("diffs16", diffs16);
+            model.put("diffs21", diffs21);
 
         }
 
