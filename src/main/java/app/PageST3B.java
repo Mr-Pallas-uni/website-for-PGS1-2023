@@ -36,7 +36,8 @@ public class PageST3B implements Handler {
 
         Map<String, Object> model = new HashMap<String, Object>();
 
-        //Pass data to template
+
+        //Pass form data to template
         model.put("title", new String("Finding similar LGAs"));
 
         ArrayList<String> conditions = jdbc.getHealthCondition();
@@ -53,13 +54,15 @@ public class PageST3B implements Handler {
         ArrayList<LGA> lgas = jdbc.getLGAs();
         model.put("lgas", lgas);
         
+
+
         //Handle lga input
         int lga_code = 0;
         if (context.formParam("lga-field-drop") != null) {
             lga_code = Integer.parseInt(context.formParam("lga-field-drop"));
         }
 
-        //Handle lga input
+        //Handle limit input (limit = number of similar LGAs to be found)
         int limit = 5;
         if (context.formParam("limit") != null) {
             limit = Integer.parseInt(context.formParam("limit"));
@@ -75,12 +78,14 @@ public class PageST3B implements Handler {
         }
 
         //Handle Census year input
-        int census_year_selected = 2016;
+        int census_year_selected = 2021;
         if (context.formParam("census-year-drop") != null) {
             census_year_selected = Integer.parseInt(context.formParam("census-year-drop"));
         }
 
         
+
+
         //Handle population
         int min_age_selected = 0;
         if (context.formParam("min-age") != null){
@@ -95,7 +100,7 @@ public class PageST3B implements Handler {
         int lowest_level = 0;
         int highest_level = 5;
         String condition = "";
-        if(context.formParam("maxSchool_drop") != null) {
+        if(context.formParam("maxSchool_drop") != null && context.formParam("minSchool_drop") != null) {
             highest_level = Integer.parseInt(context.formParam("maxSchool_drop"));
             lowest_level = Integer.parseInt(context.formParam("minSchool_drop"));
             condition = jdbc.getSchoolCompletion3B(lowest_level, highest_level);
@@ -111,31 +116,29 @@ public class PageST3B implements Handler {
             filters += "Status: " + indig_status +", "+ 
                        "Census year: " + census_year_selected +", "+ 
                        "LGA : " + data.get(0).getLgaName() +", "+ 
-                       "data on Top " + limit + " most similar LGA" ;
+                       "data on Top " + limit + " most similar LGA in terms of School Completion" ;
         }
         model.put("sc_data", data);
         model.put("filters", filters);
 
         //Handle non School completion
-        // String category_selected = "bd";
-        // if(context.formParam("non-school-completion-drop") != null) {
-        //     category_selected = convertToNonSchoolCode(context.formParam("non-school-completion-drop"));
-        // }
+        String category_selected = "";
+        if(context.formParam("non-school-completion-drop") != null && 
+           convertToNonSchoolCode(context.formParam("non-school-completion-drop")) != "") {
+            category_selected = convertToNonSchoolCode(context.formParam("non-school-completion-drop"));
+        }
 
-        // ArrayList<ST3BData> data_nsc = new ArrayList<ST3BData>();
-        // String filters_nsc = "Data displayed based on filters : ";
-        // if (context.formParam("non-school-completion-drop") == null) {
-        //     data_nsc = new ArrayList<ST3BData>();
-        //     filters_nsc = "No data Found on those filters";
-        // } else {
-        //     data_nsc = jdbc.getLGAonNSC(lga_code, indig_status, indig_status_condition, census_year_selected, category_selected, limit);
-        //     filters_nsc += "Status: " + indig_status +", "+ 
-        //                "Census year: " + census_year_selected +", "+ 
-        //                "LGA : " + data_nsc.get(0).getLgaName() +", "+ 
-        //                "data on Top " + limit + " most similar LGA" ;
-        // }
-        // model.put("data_nsc", data_nsc);
-        // model.put("filters_nsc", filters_nsc);
+        ArrayList<ST3BData> data_nsc = new ArrayList<ST3BData>();
+        String filters_nsc = "Data displayed based on filters : ";
+        if (category_selected != "" && category_selected != null) {
+            data_nsc = jdbc.getLGAonNSC(lga_code, indig_status, indig_status_condition, census_year_selected, category_selected, limit);
+            filters_nsc += "Status: " + indig_status +", "+ 
+                       "Census year: " + census_year_selected +", "+ 
+                       "LGA : " + data_nsc.get(0).getLgaName() +", "+ 
+                       "data on Top " + limit + " most similar LGA" ;
+        }
+        model.put("data_nsc", data_nsc);
+        model.put("filters_nsc", filters_nsc);
         
         // DO NOT MODIFY THIS
         // Makes Javalin render the webpage using Thymeleaf
@@ -161,7 +164,7 @@ public class PageST3B implements Handler {
                 result = "ct_iii_iv";
                 break;
             default:
-            result = "error";
+            result = "";
                 break;
         }
         return result;
