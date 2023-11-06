@@ -4,7 +4,21 @@
    margin: auto;
    text-align: center;
 }
-.link-list li{
+.link-list a {
+   overflow: hidden;
+   background-color: #333;
+
+   }
+ a{
    font-size: large;
-   padding: .2 rem;
+   padding: 1em 2em;
+   display: inline-block;
+   color: #f2f2f2;
+   text-align: center;
+   text-decoration: none;
+}
+hr {
+   color: white;
+   background-color: white;
+   height: .2em;
 }

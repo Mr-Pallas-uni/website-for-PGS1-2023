@@ -41,7 +41,6 @@ public class App {
         app.get(PageIndex.URL, new PageIndex());
         app.get(PageMission.URL, new PageMission());
         app.get(PageST2.URL, new PageST2());
-        app.get(PageST2B.URL, new PageST2B());
         app.get(PageST3A.URL, new PageST3A());
         app.get(PageST3B.URL, new PageST3B());
 
