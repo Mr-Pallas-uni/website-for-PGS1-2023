@@ -44,6 +44,7 @@
 
     <div id="Population-field">
         <form id="3Bform-pop" action="/page3B.html" method="post">
+            <input type="text" name="dataset" id="dataset" value="population" style="display: none;">
             <div id="indig-status-field" class="form-group">
                 <label for='indig-status-drop'>Select Indigenous Status</label>
                 <select id='indig-status-drop' name='indig-status-drop'>
@@ -76,9 +77,9 @@
 
             <div id="Population" class="form-group">
                 <label for="min-age">select a minimum age:</label>
-                <input id = "min-age" type="number" min= "0" max = "200" value="0">
+                <input name = "min-age" type="number" min= "0" max = "200" value="0">
                 <label for="max-age">select a maximum age:</label>
-                <input id = "max-age" type="number" min= "0" max = "200" value="200">
+                <input name = "max-age" type="number" min= "0" max = "200" value="200">
             </div>
 
             
@@ -88,6 +89,7 @@
 
     <div id="school-completion-field">
         <form id="3Bform-pop" action="/page3B.html" method="post">
+            <input type="text" name="dataset" id="dataset" value="school-completion" style="display: none;">
             <div id="indig-status-field" class="form-group">
                 <label for='indig-status-drop'>Select Indigenous Status</label>
                 <select id='indig-status-drop' name='indig-status-drop'>
@@ -150,6 +152,7 @@
 
     <div id="non-school-completion-field">
         <form id="3Bform-pop" action="/page3B.html" method="post">
+            <input type="text" name="dataset" id="dataset" value="non-school-completion" style="display: none;">
             <div id="indig-status-field" class="form-group">
                 <label for='indig-status-drop'>Select Indigenous Status</label>
                 <select id='indig-status-drop' name='indig-status-drop'>
@@ -198,6 +201,7 @@
             <span>This data is only available for 2021 census</span>
         </div>
         <form id="3Bform-pop" action="/page3B.html" method="post">
+            <input type="text" name="dataset" id="dataset" value="Health-condition" style="display: none;">
             <div id="indig-status-field" class="form-group">
                 <label for='indig-status-drop'>Select Indigenous Status</label>
                 <select id='indig-status-drop' name='indig-status-drop'>
@@ -246,8 +250,8 @@
 
     <div id="data-view">
         <div id="table-view">
-            <div id="school-completion-view" th:if="${#lists.size(sc_data) > 0}">
-                <h6 th:text="${filters}"></h6>
+            <div id="school-completion-view" th:if="${#lists.size(data_sc) > 0}">
+                <h6 th:text="${filters_sc}"></h6>
                 <table>
                     <thead>
                         <tr>
@@ -256,7 +260,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="data : ${sc_data}">
+                        <tr th:each="data : ${data_sc}">
                             <td><span th:text="${data.getLgaCode() + ' - ' + data.getLgaName()}"> LGA name/code </span></td>
                             <td><span th:text="${data.getData()}"> no. people </span></td>
                         </tr>
@@ -283,11 +287,25 @@
                 </table>
             </div>
 
-            <!-- <div id="population-view" th:if="${#lists.size(pop-data) > 0}">
-
+            <div id="population-view" th:if="${#lists.size(data_pop) > 0}">
+                <h6 th:text="${filters_pop}"></h6>
+                <table>
+                    <thead>
+                        <tr>
+                            <th> LGA name/code </th>
+                            <th> no. people </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="data : ${data_pop}">
+                            <td><span th:text="${data.getLgaCode() + ' - ' + data.getLgaName()}"> LGA name/code </span></td>
+                            <td><span th:text="${data.getData()}"> no. people </span></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <div id="health-condition-view" th:if="${#lists.size(hc-data) > 0}">
+            <!-- <div id="health-condition-view" th:if="${#lists.size(hc-data) > 0}">
 
             </div> -->
         </div>
