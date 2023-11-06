@@ -305,14 +305,14 @@ public class PageST3A implements Handler {
             
             }
 
-            //diffs = jdbc.getDiffChange(dataset, gender1, gender2, status1, status2, conditions);
-            //diffs16 = jdbc.getDiff(dataset, gender1, gender2, status1, status2, conditions, 2016);
+            diffs = jdbc.getDiffChange(dataset, gender1, gender2, status1, status2, conditions);
+            diffs16 = jdbc.getDiff(dataset, gender1, gender2, status1, status2, conditions, 2016);
             diffs21 = jdbc.getDiff(dataset, gender1, gender2, status1, status2, conditions, 2021);
 
             String userSelected ="you selected: " + dataset + ", Group 1: (" + gender1 +  ", " + status1 + "), Group 2: (" + gender2 + ", " + status2 + "), Where " + conditions;
             model.put("userSelected", userSelected);
-            //model.put("diffs", diffs);
-            //model.put("diffs16", diffs16);
+            model.put("diffs", diffs);
+            model.put("diffs16", diffs16);
             model.put("diffs21", diffs21);
 
         }

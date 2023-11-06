@@ -429,7 +429,7 @@ public class JDBCConnection {
             statement.setQueryTimeout(30);
 
             String query = 
-            "SELECT d1.name, d1.lga_code, SUM(d1.count) d1_count, SUM(d2.count) d2_count, (100* (1.0*SUM(d2.count) / SUM(d1.count))) - 1 AS gap\r\n" + //
+            "SELECT d1.name, d1.lga_code, SUM(d1.count) d1_count, SUM(d2.count) d2_count, ABS((100* (1.0*SUM(d2.count) / SUM(d1.count))) - 1) AS gap\r\n" + //
             "FROM " + dataset1 +" d1 JOIN " + dataset2 + " d2\r\n" + //
             "ON (d1.lga_code = d2.lga_code\r\n" + //
             "AND d1." + dataJoin + " = d2." + dataJoin +"\r\n" + //
