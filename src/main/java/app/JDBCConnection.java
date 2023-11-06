@@ -774,54 +774,29 @@ public class JDBCConnection {
         return conditions;
     }
 
-    public ArrayList<String> getSchoolCompletion() {
-        ArrayList<String> completionlevels = new ArrayList<String>();
+    public String getSchoolCompletion3B( int min, int max) {
+        //for quick and easy mapping.
+        String schoolCategory[] = {
+            "did_not_go_to_school",
+            "y8_below",
+            "y9_equivalent",
+            "y10_equivalent",
+            "y11_equivalent",
+            "y12_equivalent"
+         };
 
-        // Setup the variable for the JDBC connection
-        Connection connection = null;
-
-        try {
-            // Connect to JDBC data base
-            connection = DriverManager.getConnection(JDBCConnection.DATABASE);
-
-            // Prepare a new SQL Query & Set a timeout
-            Statement statement = connection.createStatement();
-            statement.setQueryTimeout(30);
-
-            // The Query
-            String query = "SELECT DISTINCT(SchoolCompletion) AS level\r\n" + //
-                           "FROM SchoolCompletion;";
+         String conditions = "AND (";
+         for (int i = min; i < max + 1; i++) {
+            if (i == min) {
+                conditions += "SchoolCompletion = '" + schoolCategory[i] + "' ";
+            }
+            else {
+                conditions += "OR SchoolCompletion = '" + schoolCategory[i] + "' ";
+            }
             
-            // Get Result
-            ResultSet results = statement.executeQuery(query);
-
-            // Process all of the results
-            while (results.next()) {
-                String completionlevel = results.getString("level");
-
-                // Add the lga object to the array
-                completionlevels.add(completionlevel);
-            }
-
-            // Close the statement because we are done with it
-            statement.close();
-        } catch (SQLException e) {
-            // If there is an error, lets just pring the error
-            System.err.println(e.getMessage());
-        } finally {
-            // Safety code to cleanup
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                // connection close failed.
-                System.err.println(e.getMessage());
-            }
-        }
-
-        // Finally we return all of the lga
-        return completionlevels;
+         }
+         conditions += ")";
+        return conditions;
     }
 
     public ArrayList<LGA> getLGAs() {
@@ -880,11 +855,13 @@ public class JDBCConnection {
         // Finally we return all of the lga
         return lgas;
     }
-    public ArrayList<ST3BData> getLGAonSC(int code, String status, int year, String level, int limit) {
+
+    public ArrayList<ST3BData> getLGAonSC(int code, String status, String status_condition, int year, String condition, int limit) {
         ArrayList<ST3BData> similarLGAs = new ArrayList<ST3BData>();
 
         // Setup the variable for the JDBC connection
         Connection connection = null;
+
 
         try {
             // Connect to JDBC data base
@@ -897,15 +874,15 @@ public class JDBCConnection {
             // The Query
             String query = "SELECT *\r\n" + //
                             "FROM Sch_S_Both\r\n" + //
-                            "WHERE indigenous_status = '" + status +"' \r\n" + //
+                            "WHERE " + status_condition + "\r\n" + //
                             "      AND lga_year = " + year + "\r\n" + //
-                            "      AND SchoolCompletion = '" + level + "'\r\n" + //
+                            "      " + condition + "\r\n" + //
                             "ORDER BY ABS(count - (SELECT count \r\n" + //
                             "                      FROM Sch_S_Both \r\n" + //
                             "                      WHERE lga_code = " + code + "\r\n" + //
-                            "                      AND indigenous_status = '" + status + "' \r\n" + //
+                            "                      AND " + status_condition + " \r\n" + //
                             "                      AND lga_year = " + year + "\r\n" + //
-                            "                      AND SchoolCompletion = '" + level + "'))\r\n" + //
+                            "                      " + condition + "))\r\n" + //
                             "LIMIT " + limit + ";";
             
             // Get Result
@@ -917,11 +894,11 @@ public class JDBCConnection {
                 int lga_code = results.getInt("lga_code");
                 int lga_year = results.getInt("lga_year");
                 String lga_name = results.getString("name");
-                String type = "School Completion " + level;
+                String type = results.getString("SchoolCompletion");
                 int count = results.getInt("count");
                 
                 LGA newLGA = new LGA(lga_code, lga_name, lga_year);
-                ST3BData similarLga = new ST3BData(newLGA, type, count);
+                ST3BData similarLga = new ST3BData(newLGA, type, status, count);
                 // Add the lga object to the array
                 similarLGAs.add(similarLga);
                 System.out.println(similarLGAs.size());
@@ -947,6 +924,76 @@ public class JDBCConnection {
         // Finally we return all of the lga
         return similarLGAs;
     }
+
+    public ArrayList<ST3BData> getLGAonNSC(int code, String status, String status_condition, int year, String category, int limit) {
+        ArrayList<ST3BData> similarLGAs = new ArrayList<ST3BData>();
+
+        // Setup the variable for the JDBC connection
+        Connection connection = null;
+
+
+        try {
+            // Connect to JDBC data base
+            connection = DriverManager.getConnection(JDBCConnection.DATABASE);
+
+            // Prepare a new SQL Query & Set a timeout
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+
+            // The Query
+            String query = "SELECT *\r\n" + //
+                            "FROM NSch_S_Both\r\n" + //
+                            "WHERE " + status_condition + "\r\n" + //
+                            "      AND lga_year = " + year + "\r\n" + //
+                            "      AND nonschoolBracket = '" + category + "'\r\n" + //
+                            "ORDER BY ABS(count - (SELECT count \r\n" + //
+                            "                      FROM NSch_S_Both \r\n" + //
+                            "                      WHERE lga_code = " + code + "\r\n" + //
+                            "                      AND " + status_condition + " \r\n" + //
+                            "                      AND lga_year = " + year + "\r\n" + //
+                            "                      AND nonschoolBracket = '" + category + "'))\r\n" + //
+                            "LIMIT " + limit + ";";
+            
+            // Get Result
+            System.out.println(query);
+            ResultSet results = statement.executeQuery(query);
+
+            // Process all of the results
+            while (results.next()) {
+                int lga_code = results.getInt("lga_code");
+                int lga_year = results.getInt("lga_year");
+                String lga_name = results.getString("name");
+                String type = results.getString("SchoolCompletion");
+                int count = results.getInt("count");
+                
+                LGA newLGA = new LGA(lga_code, lga_name, lga_year);
+                ST3BData similarLga = new ST3BData(newLGA, type, status, count);
+                // Add the lga object to the array
+                similarLGAs.add(similarLga);
+                System.out.println(similarLGAs.size());
+            }
+
+            // Close the statement because we are done with it
+            statement.close();
+        } catch (SQLException e) {
+            // If there is an error, lets just pring the error
+            System.err.println(e.getMessage());
+        } finally {
+            // Safety code to cleanup
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                // connection close failed.
+                System.err.println(e.getMessage());
+            }
+        }
+
+        // Finally we return all of the lga
+        return similarLGAs;
+    }
+    
 }
 
 

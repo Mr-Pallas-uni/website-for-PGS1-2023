@@ -50,9 +50,6 @@ public class PageST3B implements Handler {
         categories.add("certificate iii & iv level");
         model.put("completion_categories", categories);
 
-        ArrayList<String> completionlevels = jdbc.getSchoolCompletion();
-        model.put("Completion_level", completionlevels);
-
         ArrayList<LGA> lgas = jdbc.getLGAs();
         model.put("lgas", lgas);
         
@@ -70,9 +67,11 @@ public class PageST3B implements Handler {
 
         //Handle status input
         String indig_status = "indig";
+        String indig_status_condition = "";
         String indig_status_selected = context.formParam("indig-status-drop");
         if (indig_status_selected != null) {
             indig_status = indig_status_selected;
+            indig_status_condition = "(indigenous_status = " + indig_status + ")";
         }
 
         //Handle Census year input
@@ -93,18 +92,50 @@ public class PageST3B implements Handler {
         }
 
         //Handle School completion
-        String level = "did_not_go_to_school";
-        if(context.formParam("school-completion-drop") != null) {
-            level = context.formParam("school-completion-drop");
+        int lowest_level = 0;
+        int highest_level = 5;
+        String condition = "";
+        if(context.formParam("maxSchool_drop") != null) {
+            highest_level = Integer.parseInt(context.formParam("maxSchool_drop"));
+            lowest_level = Integer.parseInt(context.formParam("minSchool_drop"));
+            condition = jdbc.getSchoolCompletion3B(lowest_level, highest_level);
         }
 
         ArrayList<ST3BData> data = new ArrayList<ST3BData>();
-        if (context.formParam("school-completion-drop") == null) {
+        String filters = "Data displayed based on filters : ";
+        if (context.formParam("maxSchool_drop") == null) {
             data = new ArrayList<ST3BData>();
+            filters = "No data Found on those filters";
         } else {
-            data = jdbc.getLGAonSC(lga_code, indig_status, census_year_selected, level, limit);
+            data = jdbc.getLGAonSC(lga_code, indig_status, indig_status_condition, census_year_selected, condition, limit);
+            filters += "Status: " + indig_status +", "+ 
+                       "Census year: " + census_year_selected +", "+ 
+                       "LGA : " + data.get(0).getLgaName() +", "+ 
+                       "data on Top " + limit + " most similar LGA" ;
         }
         model.put("sc_data", data);
+        model.put("filters", filters);
+
+        //Handle non School completion
+        // String category_selected = "bd";
+        // if(context.formParam("non-school-completion-drop") != null) {
+        //     category_selected = convertToNonSchoolCode(context.formParam("non-school-completion-drop"));
+        // }
+
+        // ArrayList<ST3BData> data_nsc = new ArrayList<ST3BData>();
+        // String filters_nsc = "Data displayed based on filters : ";
+        // if (context.formParam("non-school-completion-drop") == null) {
+        //     data_nsc = new ArrayList<ST3BData>();
+        //     filters_nsc = "No data Found on those filters";
+        // } else {
+        //     data_nsc = jdbc.getLGAonNSC(lga_code, indig_status, indig_status_condition, census_year_selected, category_selected, limit);
+        //     filters_nsc += "Status: " + indig_status +", "+ 
+        //                "Census year: " + census_year_selected +", "+ 
+        //                "LGA : " + data_nsc.get(0).getLgaName() +", "+ 
+        //                "data on Top " + limit + " most similar LGA" ;
+        // }
+        // model.put("data_nsc", data_nsc);
+        // model.put("filters_nsc", filters_nsc);
         
         // DO NOT MODIFY THIS
         // Makes Javalin render the webpage using Thymeleaf
