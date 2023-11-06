@@ -1132,6 +1132,101 @@ public class JDBCConnection {
         return similarLGAs;
     }
     
+    public ArrayList<ST3BData> getLGAonHC(int code, String status, ArrayList<String> health_condition, int year, int limit) {
+        ArrayList<ST3BData> similarLGAs = new ArrayList<ST3BData>();
+
+        // Setup the variable for the JDBC connection
+        Connection connection = null;
+        String Status_condition = "";
+        switch (status) {
+            case "'indig'":
+                Status_condition = " = 'indig'";
+                break;
+            case "'non_indig'":
+            Status_condition = " = 'non_indig'";
+                break;
+            case "'indig' OR indigenous_status = 'non_indig'" :
+            Status_condition = " != 'indig_stat_not_stated'";
+        }
+
+        String health_condition_sql = "( ";
+        for (String condition : health_condition) {
+            if (condition == health_condition.get(0)) {
+                health_condition_sql += "condition = '" + condition + "' ";
+            } else {
+                health_condition_sql += " OR condition = '" + condition + "'";
+            }
+        }
+        health_condition_sql += ")";
+        try {
+            // Connect to JDBC data base
+            connection = DriverManager.getConnection(JDBCConnection.DATABASE);
+
+            // Prepare a new SQL Query & Set a timeout
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+
+            // The Query
+            String query =  "SELECT name, lga_code, lga_year, SUM(count)\r\n" + //
+                            "FROM LTHCs_S_Both\r\n" + //
+                            "WHERE (indigenous_status " + Status_condition + " \r\n" + //
+                            "    AND lga_year = " + year + "\r\n" + //
+                            "    AND " + health_condition_sql + ")\r\n" + //
+                            "GROUP BY lga_code, name, lga_year\r\n" + //
+                            "ORDER BY ABS(SUM(count) - (SELECT SUM(count)\r\n" + //
+                            "                     FROM LTHCs_S_Both\r\n" + //
+                            "                     WHERE (lga_code = " + code + " \r\n" + //
+                            "                        AND indigenous_status " + Status_condition + " \r\n" + //
+                            "                        AND lga_year = " + year + "\r\n" + //
+                            "                        AND " + health_condition_sql +  ")\r\n" + //
+                            "                     GROUP BY lga_code, name, lga_year))\r\n" + //
+                            "LIMIT " + limit + ";";
+            
+            // Get Result
+            System.out.println(query);
+            ResultSet results = statement.executeQuery(query);
+
+            // Process all of the results
+            while (results.next()) {
+                int lga_code = results.getInt("lga_code");
+                int lga_year = results.getInt("lga_year");
+                String lga_name = results.getString("name");
+                int count = results.getInt("SUM(count)");
+
+                String condition_selected_string = " ";
+                for (String condition : health_condition) {
+                    condition_selected_string += ", " + condition;
+                }
+                String type = "population of people with " + condition_selected_string;
+                
+                
+                LGA newLGA = new LGA(lga_code, lga_name, lga_year);
+                ST3BData similarLga = new ST3BData(newLGA, type, status, count);
+                // Add the lga object to the array
+                similarLGAs.add(similarLga);
+                System.out.println(similarLGAs.size());
+            }
+
+            // Close the statement because we are done with it
+            statement.close();
+        } catch (SQLException e) {
+            // If there is an error, lets just pring the error
+            System.err.println(e.getMessage());
+        } finally {
+            // Safety code to cleanup
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                // connection close failed.
+                System.err.println(e.getMessage());
+            }
+        }
+
+        // Finally we return all of the lga
+        return similarLGAs;
+    }
 }
 
 

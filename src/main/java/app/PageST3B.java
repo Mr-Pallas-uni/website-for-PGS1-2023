@@ -129,18 +129,18 @@ public class PageST3B implements Handler {
                 // School completion
                 int lowest_level = 0;
                 int highest_level = 5;
-                String condition = "";
+                String condition_sc = "";
                 if(context.formParam("maxSchool_drop") != null && context.formParam("minSchool_drop") != null) {
                     highest_level = Integer.parseInt(context.formParam("maxSchool_drop"));
                     lowest_level = Integer.parseInt(context.formParam("minSchool_drop"));
-                    condition = jdbc.getSchoolCompletion3B(lowest_level, highest_level);
+                    condition_sc = jdbc.getSchoolCompletion3B(lowest_level, highest_level);
                 }
 
                 if (context.formParam("maxSchool_drop") == null) {
                     data_sc = new ArrayList<ST3BData>();
                     filters_sc = "No data Found on those filters";
                 } else {
-                    data_sc = jdbc.getLGAonSC(lga_code, indig_status, indig_status_condition, census_year_selected, condition, limit);
+                    data_sc = jdbc.getLGAonSC(lga_code, indig_status, indig_status_condition, census_year_selected, condition_sc, limit);
                     filters_sc += "Status: " + indig_status +", "+ 
                             "Census year: " + census_year_selected +", "+ 
                             "LGA : " + jdbc.getLGAbyCode(lga_code).getName() +", "+ 
@@ -166,6 +166,21 @@ public class PageST3B implements Handler {
                 break;
 
             case "health-condition" :
+                ArrayList<String> conditions_selected = new ArrayList<String>();
+                for (String condition : conditions) {
+                    if (context.formParam(condition) != null){
+                        conditions_selected.add(condition);
+                    }
+                }
+                
+                if (conditions_selected.size() > 0) {
+                    data_hc = jdbc.getLGAonHC(lga_code, indig_status_selected, conditions_selected,
+                                              census_year_selected, limit);
+                    filters_hc += "Status: " + indig_status +", "+ 
+                                    "Census year: " + census_year_selected +", "+ 
+                                    "LGA : " + jdbc.getLGAbyCode(lga_code).getName() +", "+ 
+                                    "data on Top " + limit + " most similar LGA in terms of " + data_hc.get(0).getDataType(); 
+                }
                 break;
         }
 
