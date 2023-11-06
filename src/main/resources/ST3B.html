@@ -26,9 +26,8 @@
   </div>
 
   <div class='content'>
-    <div id="reminder-message-HC" class="reminder-message">
-        <span>This data is only available for 2021 census</span>
-    </div>
+
+
     <form id="3Bform" action="/page3B.html" method="post">
 
         <div class="form-group">
@@ -41,65 +40,195 @@
                 <option value="Health-condition-field">Health Condition</option>
             </select>
         </div>
+    </form>
 
-        <div id="indig-status-field" class="form-group">
-            <label for='indig-status-drop'>Select Indigenous Status</label>
-            <select id='indig-status-drop' name='indig-status-drop'>
-                <option value="'indig'">Indigenous</option>
-                <option value="'non_indig'">non-Indigenous</option>
-                <option value="'indig' OR indigenous_status = 'non_indig'">both</option>
-            </select>
-        </div>
-
-        <div id="census-year-field" class="form-group">
-            <label for='census-year-drop'>Select Census Year</label>
-            <select id='census-year-drop' name='census-year-drop'>
-                <option value="2016">2016 census</option>
-                <option value="2021">2021 census</option>
-            </select>
-        </div>
-
-        <div id="Population-field" class="form-group">
-            <label for="min-age">select a minimum age:</label>
-            <input id = "min-age" type="number" min= "0" max = "200" value="0">
-            <label for="max-age">select a maximum age:</label>
-            <input id = "max-age" type="number" min= "0" max = "200" value="200">
-        </div>
-
-        <div id="school-completion-field" class="form-group">
-            <div class='form-group'>
-                <label for="minSchool_drop">select the lowest level of school completion:</label>
-                <select id = "minSchool_drop" name = "minSchool_drop">
-                    <option value = "0">did not go to school</option>
-                    <option value = "1">year 8</option>
-                    <option value = "2">year 9</option>
-                    <option value = "3">year 10</option>
-                    <option value = "4">year 11</option>
-                    <option value = "5">year 12+</option>
-                </select>
-
-                <br>
-
-                <label for="minSchool_drop">select the highest level of school completion:</label>
-                <select id = "maxSchool_drop" name = "maxSchool_drop">
-                    <option value = "0">did not go to school</option>
-                    <option value = "1">year 8</option>
-                    <option value = "2">year 9</option>
-                    <option value = "3">year 10</option>
-                    <option value = "4">year 11</option>
-                    <option value = "5">year 12+</option>
+    <div id="Population-field">
+        <form id="3Bform-pop" action="/page3B.html" method="post">
+            <div id="indig-status-field" class="form-group">
+                <label for='indig-status-drop'>Select Indigenous Status</label>
+                <select id='indig-status-drop' name='indig-status-drop'>
+                    <option value="'indig'">Indigenous</option>
+                    <option value="'non_indig'">non-Indigenous</option>
+                    <option value="'indig' OR indigenous_status = 'non_indig'">both</option>
                 </select>
             </div>
-        </div>
+    
+            <div id="census-year-field" class="form-group">
+                <label for='census-year-drop'>Select Census Year</label>
+                <select id='census-year-drop' name='census-year-drop'>
+                    <option value="2016">2016 census</option>
+                    <option value="2021">2021 census</option>
+                </select>
+            </div>
+            
+            <div id="lga-field" class="form-group">
+                <label for="lga-field-drop">Select an LGA to find other similar LGAs</label>
+                <select name="lga-field-drop" id="lga-field-drop">
+                    <option th:each="lga : ${lgas}" th:text="${lga.getCode() + '-' + lga.getName()}" th:value="${lga.getCode()}">
+                    </option>
+                </select>
+            </div>
+    
+            <div id="limit" class="form-group">
+                <label for="limit">Set how many similar LGAs to be retrieved</label>
+                <input name = "limit" id = "limit" type="number" min= "0" max = "999" value="5">
+            </div>
 
-        <div id="non-school-completion-field" class="form-group">
-            <label for="non-school-completion-drop">Select non-school completion category</label>
-            <select name="non-school-completion-drop" id="non-school-completion-drop">
-                <option th:each="category : ${completion_categories}" th:text="${category}" th:value="${category}"></option>
-            </select>
-        </div>
+            <div id="Population" class="form-group">
+                <label for="min-age">select a minimum age:</label>
+                <input id = "min-age" type="number" min= "0" max = "200" value="0">
+                <label for="max-age">select a maximum age:</label>
+                <input id = "max-age" type="number" min= "0" max = "200" value="200">
+            </div>
 
-        <div id="Health-condition-field" class="form-group">
+            
+            <input id="3BformSubmit" type="submit" value="submit" class="submit-btn">
+        </form>
+    </div>
+
+    <div id="school-completion-field">
+        <form id="3Bform-pop" action="/page3B.html" method="post">
+            <div id="indig-status-field" class="form-group">
+                <label for='indig-status-drop'>Select Indigenous Status</label>
+                <select id='indig-status-drop' name='indig-status-drop'>
+                    <option value="'indig'">Indigenous</option>
+                    <option value="'non_indig'">non-Indigenous</option>
+                    <option value="'indig' OR indigenous_status = 'non_indig'">both</option>
+                </select>
+            </div>
+    
+            <div id="census-year-field" class="form-group">
+                <label for='census-year-drop'>Select Census Year</label>
+                <select id='census-year-drop' name='census-year-drop'>
+                    <option value="2016">2016 census</option>
+                    <option value="2021">2021 census</option>
+                </select>
+            </div>
+            
+            <div id="lga-field" class="form-group">
+                <label for="lga-field-drop">Select an LGA to find other similar LGAs</label>
+                <select name="lga-field-drop" id="lga-field-drop">
+                    <option th:each="lga : ${lgas}" th:text="${lga.getCode() + '-' + lga.getName()}" th:value="${lga.getCode()}">
+                    </option>
+                </select>
+            </div>
+    
+            <div id="limit" class="form-group">
+                <label for="limit">Set how many similar LGAs to be retrieved</label>
+                <input name = "limit" id = "limit" type="number" min= "0" max = "999" value="5">
+            </div>
+
+            <div id="school-completion" class="form-group">
+                <div class='form-group'>
+                    <label for="minSchool_drop">select the lowest level of school completion:</label>
+                    <select id = "minSchool_drop" name = "minSchool_drop">
+                        <option value = "0">did not go to school</option>
+                        <option value = "1">year 8</option>
+                        <option value = "2">year 9</option>
+                        <option value = "3">year 10</option>
+                        <option value = "4">year 11</option>
+                        <option value = "5">year 12+</option>
+                    </select>
+    
+                    <br>
+    
+                    <label for="minSchool_drop">select the highest level of school completion:</label>
+                    <select id = "maxSchool_drop" name = "maxSchool_drop">
+                        <option value = "0">did not go to school</option>
+                        <option value = "1">year 8</option>
+                        <option value = "2">year 9</option>
+                        <option value = "3">year 10</option>
+                        <option value = "4">year 11</option>
+                        <option value = "5">year 12+</option>
+                    </select>
+                </div>
+            </div>
+
+            <input id="3BformSubmit" type="submit" value="submit" class="submit-btn">
+        </form>
+    </div>
+
+    <div id="non-school-completion-field">
+        <form id="3Bform-pop" action="/page3B.html" method="post">
+            <div id="indig-status-field" class="form-group">
+                <label for='indig-status-drop'>Select Indigenous Status</label>
+                <select id='indig-status-drop' name='indig-status-drop'>
+                    <option value="'indig'">Indigenous</option>
+                    <option value="'non_indig'">non-Indigenous</option>
+                    <option value="'indig' OR indigenous_status = 'non_indig'">both</option>
+                </select>
+            </div>
+    
+            <div id="census-year-field" class="form-group">
+                <label for='census-year-drop'>Select Census Year</label>
+                <select id='census-year-drop' name='census-year-drop'>
+                    <option value="2016">2016 census</option>
+                    <option value="2021">2021 census</option>
+                </select>
+            </div>
+            
+            <div id="lga-field" class="form-group">
+                <label for="lga-field-drop">Select an LGA to find other similar LGAs</label>
+                <select name="lga-field-drop" id="lga-field-drop">
+                    <option th:each="lga : ${lgas}" th:text="${lga.getCode() + '-' + lga.getName()}" th:value="${lga.getCode()}">
+                    </option>
+                </select>
+            </div>
+    
+            <div id="limit" class="form-group">
+                <label for="limit">Set how many similar LGAs to be retrieved</label>
+                <input name = "limit" id = "limit" type="number" min= "0" max = "999" value="5">
+            </div>
+
+            <div id="non-school-completion" class="form-group">
+                <label for="non-school-completion-drop">Select non-school completion category</label>
+                <select name="non-school-completion-drop" id="non-school-completion-drop">
+                    <option value="">Select a completion level</option>
+                    <option th:each="category : ${completion_categories}" th:text="${category}" th:value="${category}"></option>
+                </select>
+            </div>
+
+            <input id="3BformSubmit" type="submit" value="submit" class="submit-btn">
+        </form>
+    </div>
+
+    <div id="Health-condition-field">
+        
+        <div id="reminder-message-HC" class="reminder-message">
+            <span>This data is only available for 2021 census</span>
+        </div>
+        <form id="3Bform-pop" action="/page3B.html" method="post">
+            <div id="indig-status-field" class="form-group">
+                <label for='indig-status-drop'>Select Indigenous Status</label>
+                <select id='indig-status-drop' name='indig-status-drop'>
+                    <option value="'indig'">Indigenous</option>
+                    <option value="'non_indig'">non-Indigenous</option>
+                    <option value="'indig' OR indigenous_status = 'non_indig'">both</option>
+                </select>
+            </div>
+    
+            <div id="census-year-field" class="form-group">
+                <label for='census-year-drop'>Select Census Year</label>
+                <select id='census-year-drop' name='census-year-drop'>
+                    <option value="2016" disabled>2016 census</option>
+                    <option value="2021">2021 census</option>
+                </select>
+            </div>
+            
+            <div id="lga-field" class="form-group">
+                <label for="lga-field-drop">Select an LGA to find other similar LGAs</label>
+                <select name="lga-field-drop" id="lga-field-drop">
+                    <option th:each="lga : ${lgas}" th:text="${lga.getCode() + '-' + lga.getName()}" th:value="${lga.getCode()}">
+                    </option>
+                </select>
+            </div>
+    
+            <div id="limit" class="form-group">
+                <label for="limit">Set how many similar LGAs to be retrieved</label>
+                <input name = "limit" id = "limit" type="number" min= "0" max = "999" value="5">
+            </div>
+
+            <div id="Health-condition" class="form-group">
             <label for="Health-condition-drop">Select Long-term Health condition</label>
             <select name="Health-condition-drop" id="Health-condition-drop">
                 <option th:each="condition : ${health_conditions}" th:text="${condition}" th:value="${condition}"></option>
@@ -110,21 +239,10 @@
             </div> -->
         </div>
 
-        <div id="lga-field" class="form-group">
-            <label for="lga-field-drop">Select an LGA to find other similar LGAs</label>
-            <select name="lga-field-drop" id="lga-field-drop">
-                <option th:each="lga : ${lgas}" th:text="${lga.getCode() + '-' + lga.getName()}" th:value="${lga.getCode()}">
-                </option>
-            </select>
-        </div>
+            <input id="3BformSubmit" type="submit" value="submit" class="submit-btn">
+        </form>
+    </div>
 
-        <div id="limit" class="form-group">
-            <label for="limit">Set how many similar LGAs to be retrieved</label>
-            <input name = "limit" id = "limit" type="number" min= "0" max = "999" value="5">
-        </div>
-        
-        <input id="3BformSubmit" type="submit" value="submit" class="submit-btn">
-    </form>
 
     <div id="data-view">
         <div id="table-view">
@@ -147,7 +265,7 @@
             </div>
             </div>
 
-            <!-- <div id="non-school-completion-view" th:if="${#lists.size(data_nsc) > 0}">
+            <div id="non-school-completion-view" th:if="${#lists.size(data_nsc) > 0}">
                 <h6 th:text="${filters_nsc}"></h6>
                 <table>
                     <thead>
@@ -163,7 +281,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </div> -->
+            </div>
 
             <!-- <div id="population-view" th:if="${#lists.size(pop-data) > 0}">
 
@@ -183,23 +301,15 @@
 
    <script>
             //hide all fields at the start
-            let reminderMessage = document.getElementById("reminder-message-HC");
-            let lgaField = document.getElementById("lga-field");
-            let limitField = document.getElementById("limit");
             let SCField = document.getElementById("school-completion-field");
             let NSCField = document.getElementById("non-school-completion-field");
             let populationField = document.getElementById("Population-field");
             let HCField = document.getElementById("Health-condition-field");
-            let submitBtn = document.getElementById("3BformSubmit");
             
-            reminderMessage.style.display = "none"; //This is used in Longterm healthcondition field
-            lgaField.style.display = "none";
-            limitField.style.display = "none";
             SCField.style.display = "none";
             NSCField.style.display = "none";
             populationField.style.display = "none";
             HCField.style.display = "none";
-            submitBtn.style.display = "none";
 
         //based on option show fields
         function data(event) {
@@ -220,62 +330,47 @@
         }
         function hideAllFields() {
 
-            reminderMessage.style.display = "none";
-            lgaField.style.display = "none";
-            limitField.style.display = "none";
             SCField.style.display = "none";
             NSCField.style.display = "none";
             populationField.style.display = "none";
             HCField.style.display = "none";
-            submitBtn.style.display = "none";
+
         }
 
         function showSCField() {
 
-            reminderMessage.style.display = "none";
-            lgaField.style.display = "block";
-            limitField.style.display = "block";
             SCField.style.display = "block";
             NSCField.style.display = "none";
             populationField.style.display = "none";
             HCField.style.display = "none";
-            submitBtn.style.display = "block";
+
         }
 
         function showNSCField() {
 
-            reminderMessage.style.display = "none";
-            lgaField.style.display = "block";
-            limitField.style.display = "block";
             SCField.style.display = "none";
             NSCField.style.display = "block";
             populationField.style.display = "none";
             HCField.style.display = "none";
-            submitBtn.style.display = "block";
         }
 
         function showPopulationField() {
 
-            reminderMessage.style.display = "none";
-            lgaField.style.display = "block";
-            limitField.style.display = "block";
             SCField.style.display = "none";
             NSCField.style.display = "none";
             populationField.style.display = "block";
             HCField.style.display = "none";
-            submitBtn.style.display = "block";
+
         }
 
         function showHCField() {
 
-            reminderMessage.style.display = "block";
-            lgaField.style.display = "block";
-            limitField.style.display = "none";
+
             SCField.style.display = "none";
             NSCField.style.display = "none";
             populationField.style.display = "none";
             HCField.style.display = "block";
-            submitBtn.style.display = "block";
+
         }
     </script>
 </body>
