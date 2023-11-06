@@ -201,7 +201,7 @@
             <span>This data is only available for 2021 census</span>
         </div>
         <form id="3Bform-pop" action="/page3B.html" method="post">
-            <input type="text" name="dataset" id="dataset" value="Health-condition" style="display: none;">
+            <input type="text" name="dataset" id="dataset" value="health-condition" style="display: none;">
             <div id="indig-status-field" class="form-group">
                 <label for='indig-status-drop'>Select Indigenous Status</label>
                 <select id='indig-status-drop' name='indig-status-drop'>
@@ -234,13 +234,10 @@
 
             <div id="Health-condition" class="form-group">
             <label for="Health-condition-drop">Select Long-term Health condition</label>
-            <select name="Health-condition-drop" id="Health-condition-drop">
-                <option th:each="condition : ${health_conditions}" th:text="${condition}" th:value="${condition}"></option>
-            </select>
             
-            <!-- <div th:each="condition : ${health_conditions}">
-                <input th:id="${condition}" type="checkbox" th:text="${condition}" th:value="${condition}">
-            </div> -->
+            <div th:each="condition : ${health_conditions}">
+                <input th:name="${condition}" type="checkbox" th:text="${condition}" th:value="${condition}">
+            </div>
         </div>
 
             <input id="3BformSubmit" type="submit" value="submit" class="submit-btn">
@@ -305,9 +302,23 @@
                 </table>
             </div>
 
-            <!-- <div id="health-condition-view" th:if="${#lists.size(hc-data) > 0}">
-
-            </div> -->
+            <div id="health-condition-view" th:if="${#lists.size(data_hc) > 0}">
+                <h6 th:text="${filters_hc}"></h6>
+                <table>
+                    <thead>
+                        <tr>
+                            <th> LGA name/code </th>
+                            <th> no. people </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="data : ${data_hc}">
+                            <td><span th:text="${data.getLgaCode() + ' - ' + data.getLgaName()}"> LGA name/code </span></td>
+                            <td><span th:text="${data.getData()}"> no. people </span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
